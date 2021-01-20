@@ -44,8 +44,8 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  padding: 40px;
-  width: 400px;
+  padding: 20px;
+  width: 300px;
   margin: 200px auto;
 
   .button-container {
