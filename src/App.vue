@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Login from "./components/Login";
+// import Login from "./components/Login";
 import ResetPassword from "./components/ResetPassword";
 
 export default {
