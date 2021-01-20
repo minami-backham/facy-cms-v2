@@ -56,6 +56,7 @@ export default {
     .button {
       background-color: red;
       color: white;
+      width: 100%;
     }
   }
 }
