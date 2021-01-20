@@ -1,0 +1,11 @@
+{
+  "ADMIN": { "id": "admin", "label": { "ja": "管理者", "en": "Admin" } },
+  "MARKETER": {
+    "id": "marketer",
+    "label": { "ja": "マーケター", "en": "Marketer" }
+  },
+  "SUPPORT": {
+    "id": "support",
+    "label": { "ja": "カスタムサポート", "en": "Custom support" }
+  }
+}

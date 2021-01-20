@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": 101,
+      "name": "山田太郎",
+      "mail": "yamada@gmail.com",
+      "roll": "admin"
+    },
+    {
+      "id": 102,
+      "name": "佐藤太郎",
+      "mail": "sato@gmail.com",
+      "roll": "marketer"
+    },
+    {
+      "id": 103,
+      "name": "鈴木太郎",
+      "mail": "suzuki@gmail.com",
+      "roll": "support"
+    }
+  ]
+}
