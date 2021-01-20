@@ -9,7 +9,6 @@
         label="新しいパスワード"
         required
       ></v-text-field>
-      <p>{{ password }}</p>
       <v-text-field
         class="cols-4"
         v-model="repassword"
@@ -17,7 +16,6 @@
         label="新しいパスワードをもう一度入力"
         required
       ></v-text-field>
-      <p>{{ repassword }}</p>
     </v-form>
     <div class="button-container">
       <v-btn color="error" class="button mr-4" @click="checkPassword()"
