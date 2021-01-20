@@ -1,33 +1,26 @@
 <template>
-  <div>
-    <v-form v-model="valid" class="login">
-      <v-container>
-        <v-row class="login-form">
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="email"
-              :rules="emailRules"
-              label="メールアドレス"
-              required
-            ></v-text-field>
-          </v-col>
+  <div class="login">
+    <v-form ref="form" v-model="valid" lazy-validation>
+      <v-text-field
+        class="cols-4"
+        v-model="email"
+        :rules="emailRules"
+        label="メールアドレス"
+        required
+      ></v-text-field>
 
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="password"
-              :rules="passwordRules"
-              type="password"
-              label="パスワード"
-              required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-text-field
+        class="cols-4"
+        v-model="password"
+        :rules="passwordRules"
+        type="password"
+        label="パスワード"
+        required
+      ></v-text-field>
     </v-form>
-
-    <v-col cols="12" md="4" class="button">
-      <v-btn class="button-container" elevation="6" large>ログイン</v-btn>
-    </v-col>
+    <div class="button-container">
+      <v-btn color="error" class="button mr-4">　ログイン　</v-btn>
+    </div>
   </div>
 </template>
 
@@ -38,7 +31,7 @@ export default {
     email: "",
     emailRules: [
       (v) => !!v || "メールアドレスの入力は必須です",
-      (v) => /.+@.+/.test(v) || "E-mail must be valid",
+      (v) => /.+@.+/.test(v) || "有効なメールアドレスを入力してください",
     ],
     password: "",
     passwordRules: [
@@ -51,21 +44,19 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  padding: 20px 10px;
-  margin: auto 0;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.button {
-  text-align: center;
+  padding: 40px;
+  width: 510px;
+  height: 500px;
+  margin: 200px auto;
+  tpo: 50%;
 
   .button-container {
-    background-color: red;
-    color: white;
+    text-align: center;
+    margin-top: 50px;
+    .button {
+      background-color: red;
+      color: white;
+    }
   }
 }
 </style>
