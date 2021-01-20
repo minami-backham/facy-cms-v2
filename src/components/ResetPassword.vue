@@ -50,6 +50,7 @@ export default {
         this.clearForm();
       } else {
         alert("パスワード一致");
+        this.clearForm();
       }
     },
     clearForm() {
