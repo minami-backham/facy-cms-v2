@@ -46,7 +46,6 @@ export default {
 .login {
   padding: 40px;
   width: 400px;
-  height: 500px;
   margin: 200px auto;
 
   .button-container {
