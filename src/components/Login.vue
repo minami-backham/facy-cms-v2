@@ -45,10 +45,9 @@ export default {
 <style lang="scss" scoped>
 .login {
   padding: 40px;
-  width: 510px;
+  width: 400px;
   height: 500px;
   margin: 200px auto;
-  tpo: 50%;
 
   .button-container {
     text-align: center;
