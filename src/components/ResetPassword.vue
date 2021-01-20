@@ -47,6 +47,7 @@ export default {
     checkPassword() {
       if (this.password !== this.repassword) {
         alert("パスワードが一致しませ。もう一度入力");
+        this.clearForm();
         console.log("no match pass", this.password);
         console.log("no match repass", this.repassword);
       } else {
@@ -54,6 +55,10 @@ export default {
         console.log("1", this.password);
         console.log("2", this.repassword);
       }
+    },
+    clearForm() {
+      this.password = "";
+      this.repassword = "";
     },
   },
 };
