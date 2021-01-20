@@ -48,12 +48,8 @@ export default {
       if (this.password !== this.repassword) {
         alert("パスワードが一致しませ。もう一度入力");
         this.clearForm();
-        console.log("no match pass", this.password);
-        console.log("no match repass", this.repassword);
       } else {
         alert("パスワード一致");
-        console.log("1", this.password);
-        console.log("2", this.repassword);
       }
     },
     clearForm() {
