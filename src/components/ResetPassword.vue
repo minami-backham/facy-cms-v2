@@ -68,8 +68,6 @@
 </template>
 
 <script>
-import { ValidationProvider } from "vee-validate";
-
 export default {
   data: () => ({
     valid: false,
