@@ -7,7 +7,17 @@ import App from "./App";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 
+// for VeeValidate
+import VeeValidate, { Validator } from "vee-validate";
+// 日本語ファイルを読み込み
+import ja from "vee-validate/dist/locale/ja";
+
 Vue.use(Vuetify);
+Vue.use(VeeValidate);
+
+// vee-validateの日本語
+Validator.localize("ja", ja);
+Vue.use(VeeValidate, { locale: ja });
 
 Vue.config.productionTip = false;
 
