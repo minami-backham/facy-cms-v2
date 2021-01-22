@@ -1,28 +1,6 @@
 <template>
   <div>
-    <!-- <div class="input-group">
-      <h4 id="header">Enter Password</h4>
-
-      <div class="input-fields">
-        <input
-          v-validate="'required'"
-          name="password"
-          type="password"
-          placeholder="Password"
-          ref="password"
-        />
-
-        <input
-          v-validate="'required|confirmed:password'"
-          name="password_confirmation"
-          type="password"
-          placeholder="Password, Again"
-          data-vv-as="password"
-        />
-      </div>
-    </div> -->
-
-    <div class="reset-password">
+    <div class="reset-password" :ref="reset_password">
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
           class="cols-4"
@@ -30,18 +8,15 @@
           :rules="passwordRules"
           type="password"
           label="新しいパスワード"
-          required
           v-validate="'required'"
           name="password"
           ref="password"
         ></v-text-field>
         <v-text-field
-          class="cols-4"
+          class="cols-4 comfirm_password"
           v-model="repassword"
-          :rules="repasswordRules"
           type="password"
           label="新しいパスワードをもう一度入力"
-          required
           v-validate="'required|confirmed:password'"
           name="password_confirmation"
           data-vv-as="password"
@@ -50,16 +25,16 @@
 
       <!-- ERRORS -->
       <div class="alert alert-danger" v-show="errors.any()">
-        <div v-if="errors.has('password')">
-          {{ errors.first("password") }}
-        </div>
-        <div v-if="errors.has('password_confirmation')">
+        <div
+          v-if="errors.has('password_confirmation')"
+          class="confirm-error_message"
+        >
           {{ errors.first("password_confirmation") }}
         </div>
       </div>
 
       <div class="button-container">
-        <v-btn color="error" class="button mr-4" @click="checkPassword()"
+        <v-btn class="button mr-4" @click="checkPassword()"
           >パスワードを変更</v-btn
         >
       </div>
@@ -73,30 +48,25 @@ export default {
     valid: false,
     password: "",
     passwordRules: [
-      (v) => !!v || "パスワードの入力は必須です",
       (v) => 8 <= v.length || "８文字以上のパスワードを入力してください",
     ],
     repassword: "",
-    repasswordRules: [
-      (v) => !!v || "パスワードの入力は必須です",
-      (v) =>
-        8 <= v.length || "上記で設定したパスワードをもう一度入力してください",
-    ],
+    isActive: true,
   }),
-  //   components: {
-  //   ValidationProvider
-  // },
   methods: {
     checkPassword() {
-      if (this.password !== this.repassword) {
+      if (this.password == "" && this.repassword == "") {
+        alert("パスワードが入力されていません");
+      } else if (this.password !== this.repassword) {
         alert("パスワードが一致しませ。もう一度入力");
         this.clearForm();
       } else {
         alert("パスワード一致");
         this.clearForm();
       }
+      this.clearForm();
     },
-    clearForm() {
+    clearForm(e) {
       this.password = "";
       this.repassword = "";
     },
@@ -109,6 +79,12 @@ export default {
   padding: 20px;
   width: 300px;
   margin: 200px auto;
+
+  .confirm-error_message {
+    margin-top: 20px;
+    color: red;
+    font-size: 15px;
+  }
 
   .button-container {
     text-align: center;

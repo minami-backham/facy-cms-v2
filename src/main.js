@@ -7,10 +7,8 @@ import App from "./App";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 
-// VeeValidateはvalidateを使えるようにするため
-// Validatorは日本語ファイルを読み込むため
+// for VeeValidate
 import VeeValidate, { Validator } from "vee-validate";
-
 // 日本語ファイルを読み込み
 import ja from "vee-validate/dist/locale/ja";
 
