@@ -13,6 +13,7 @@
         class="cols-4"
         v-model="repassword"
         :rules="repasswordRules"
+        type="password"
         label="新しいパスワードをもう一度入力"
         required
       ></v-text-field>
