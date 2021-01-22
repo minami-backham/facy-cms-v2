@@ -80,10 +80,13 @@ export default {
   width: 300px;
   margin: 200px auto;
 
+  .comfirm_password {
+    height: 50px;
+  }
+
   .confirm-error_message {
-    margin-top: 20px;
-    color: red;
-    font-size: 15px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
   }
 
   .button-container {
