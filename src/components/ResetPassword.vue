@@ -66,7 +66,7 @@ export default {
       }
       this.clearForm();
     },
-    clearForm(e) {
+    clearForm() {
       this.password = "";
       this.repassword = "";
     },
