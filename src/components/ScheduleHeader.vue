@@ -1,19 +1,55 @@
 <template>
   <v-row class="scheule-header">
-    <v-col>
+    <v-col cols="3">
       <v-select
-        v-model="sortType"
-        :items="sortOptions"
+        v-model="sortKey"
+        :items="sortKeyOptions"
         item-text="label"
         item-value="value"
-        label="並べ替え"
+        label="並べ替える項目を選択"
         filled
         dense
         return-object
-        @change="$emit('sort-type', sortType)"
+        @change="$emit('sort-key', sortKey)"
       ></v-select>
     </v-col>
-    <v-col>
+    <v-col cols="3">
+      <v-select
+        v-model="sortOrder"
+        :items="sortOrderOptions"
+        item-text="label"
+        item-value="value"
+        label="昇順/降順"
+        filled
+        dense
+        return-object
+        @change="$emit('sort-order', sortOrder)"
+      >
+      </v-select>
+      <!-- <v-radio-group
+        v-model="sortOrder"
+        @change="$emit('sort-order', sortOrder)"
+      >
+        <v-row>
+          <v-col>
+            <v-radio value="asc">
+              <template v-slot:label>
+                <div>昇順</div>
+              </template>
+            </v-radio>
+          </v-col>
+          <v-col>
+            <v-radio value="desc">
+              <template v-slot:label>
+                <div>降順</div>
+              </template>
+            </v-radio>
+          </v-col>
+        </v-row>
+      </v-radio-group> -->
+    </v-col>
+
+    <v-col cols="3">
       <v-menu
         ref="menu"
         v-model="menu"
@@ -59,54 +95,21 @@ export default {
   data: () => {
     return {
       sortType: null,
+      sortKey: null,
+      sortOrder: "asc",
       menu: false,
       dates: null,
-      sortOptions: [
-        { label: "日付（昇順）", value: { sortKey: "date", sortOrder: "asc" } },
-        {
-          label: "日付（降順）",
-          value: { sortKey: "date", sortOrder: "desc" },
-        },
-        {
-          label: "開始時間（昇順）",
-          value: { sortKey: "start_time", sortOrder: "asc" },
-        },
-        {
-          label: "開始時間（降順）",
-          value: { sortKey: "start_time", sortOrder: "desc" },
-        },
-        {
-          label: "終了時間（昇順）",
-          value: { sortKey: "end_time", sortOrder: "asc" },
-        },
-        {
-          label: "終了時間（降順）",
-          value: { sortKey: "end_time", sortOrder: "desc" },
-        },
-        {
-          label: "メールアドレス（昇順）",
-          value: { sortKey: "user_mail", sortOrder: "asc" },
-        },
-        {
-          label: "メールアドレス（降順）",
-          value: { sortKey: "user_mail", sortOrder: "desc" },
-        },
-        {
-          label: "サポートid（昇順）",
-          value: { sortKey: "video_user_id", sortOrder: "asc" },
-        },
-        {
-          label: "サポートid（降順）",
-          value: { sortKey: "video_user_id", sortOrder: "desc" },
-        },
-        {
-          label: "カスタマーid（昇順）",
-          value: { sortKey: "video_cms_id", sortOrder: "asc" },
-        },
-        {
-          label: "カスタマーid（降順）",
-          value: { sortKey: "video_cms_id", sortOrder: "desc" },
-        },
+      sortKeyOptions: [
+        { label: "日付", value: "date" },
+        { label: "開始時間", value: "start_time" },
+        { label: "終了時間", value: "end_time" },
+        { label: "メールアドレス", value: "user_mail" },
+        { label: "サポートid", value: "video_user_id" },
+        { label: "カスタマーid", value: "video_cms_id" },
+      ],
+      sortOrderOptions: [
+        { label: "昇順", value: "asc" },
+        { label: "降順", value: "desc" },
       ],
     };
   },

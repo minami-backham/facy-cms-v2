@@ -1,6 +1,10 @@
 <template>
   <div class="schedule">
-    <ScheduleHeader @date-range="setDateRange" @sort-type="setSortType" />
+    <ScheduleHeader
+      @date-range="setDateRange"
+      @sort-key="setSortKey"
+      @sort-order="setSortOrder"
+    />
     <ScheduleTable :reservations="sorted" />
   </div>
 </template>
@@ -20,7 +24,7 @@ export default {
       reserveData: RESERVE.reserve,
       dateRange: null,
       sortKey: null,
-      sortOrder: null,
+      sortOrder: "asc",
     };
   },
   methods: {
@@ -29,9 +33,11 @@ export default {
       //絞り込み期間の日付を昇順で並べ替えておく
       this.dateRange = _.sortBy(value);
     },
-    setSortType(value) {
-      this.sortKey = value.value.sortKey;
-      this.sortOrder = value.value.sortOrder;
+    setSortKey(value) {
+      this.sortKey = value.value;
+    },
+    setSortOrder(value) {
+      this.sortOrder = value.value;
     },
   },
   computed: {
