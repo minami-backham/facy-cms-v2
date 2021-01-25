@@ -24,7 +24,7 @@ export default {
       reserveData: RESERVE.reserve,
       dateRange: null,
       sortKey: null,
-      sortOrder: "asc",
+      sortOrder: null,
     };
   },
   methods: {

@@ -26,27 +26,6 @@
         @change="$emit('sort-order', sortOrder)"
       >
       </v-select>
-      <!-- <v-radio-group
-        v-model="sortOrder"
-        @change="$emit('sort-order', sortOrder)"
-      >
-        <v-row>
-          <v-col>
-            <v-radio value="asc">
-              <template v-slot:label>
-                <div>昇順</div>
-              </template>
-            </v-radio>
-          </v-col>
-          <v-col>
-            <v-radio value="desc">
-              <template v-slot:label>
-                <div>降順</div>
-              </template>
-            </v-radio>
-          </v-col>
-        </v-row>
-      </v-radio-group> -->
     </v-col>
 
     <v-col cols="3">
