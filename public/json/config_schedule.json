@@ -4,7 +4,7 @@
       "active": true,
       "start_time": "10:00",
       "end_time": "17:00",
-      "time": "30",
+      "time": "15",
       "detail": [
         {
           "timeid": 1,
@@ -518,9 +518,9 @@
     },
     "Sunday": {
       "active": false,
-      "start_time": "10:00",
-      "end_time": "17:00",
-      "time": "30",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "time": "60",
       "detail": [
         {
           "timeid": 1,

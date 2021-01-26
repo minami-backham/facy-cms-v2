@@ -1,31 +1,23 @@
 <template>
   <div class="manage-table">
-    <div class="manage-table-title">曜日</div>
+    <div class="manage-table-title">
+      <v-checkbox
+        v-model="dayData.active"
+        :label="`${func.getJpDay(dayName)}曜日`"
+      ></v-checkbox>
+    </div>
     <div class="manage-table-inner">
       <div class="manage-table__header">
-        <div class="header__day"></div>
-        <div class="header__active"></div>
-        <div class="header__check"></div>
         <div class="header__start-time">開始時刻</div>
         <div class="header__end-time">終了時刻</div>
         <div class="header__time">時間</div>
-        <div class="header__edit"></div>
       </div>
       <div class="manage-table__content">
-        <div class="timetable" v-for="(day, index) in weekData" :key="index">
-          <div class="table__day">{{ func.getJpDay(index) }}</div>
-          <div class="table__active">
-            <v-btn icon>
-              <v-icon>{{ clock }}</v-icon>
-            </v-btn>
-          </div>
-          <div class="table__check">
-            <v-checkbox v-model="weekData[index].active"></v-checkbox>
-          </div>
+        <div class="timetable">
           <div class="table__start-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].start_time"
+              v-model="dayData.start_time"
               filled
               dense
             ></v-select>
@@ -33,7 +25,7 @@
           <div class="table__end-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].end_time"
+              v-model="dayData.end_time"
               filled
               dense
             ></v-select>
@@ -41,8 +33,8 @@
           <div class="table__time">
             <v-select
               :items="selectTimeDuration"
-              item-text="`${weekData[index].time}分`"
-              v-model="weekData[index].time"
+              item-text="`${dayData.time}分`"
+              v-model="dayData.time"
               filled
               dense
             >
@@ -51,27 +43,23 @@
               </template>
             </v-select>
           </div>
-          <div class="table__edit">
-            <v-btn icon @click="openDrawer(weekData[index], index)">
-              <v-icon>{{ edit }}</v-icon>
-            </v-btn>
-          </div>
         </div>
       </div>
-      <!-- 編集 drawer -->
-      <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableWeekDetails :dayName="editDayName" :dayData="editDayData" />
-      </Drawer>
+    </div>
+    <v-divider></v-divider>
+    <div class="manage-table-inner">
+      <span v-for="time in dayData.detail" :key="time.timeid">
+        <v-checkbox
+          v-model="time.active"
+          :label="`${time.start} - ${time.end}`"
+        ></v-checkbox>
+      </span>
     </div>
   </div>
 </template>
 <script>
 import * as _ from "lodash";
-import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
-import Drawer from "./Drawer.vue";
-import ManageTableWeekDetails from "./ManageTableWeekDetails.vue";
-import { mdiPencil } from "@mdi/js";
-import { mdiClockTimeFourOutline } from "@mdi/js";
+// import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
 import func from "../func.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 
@@ -80,38 +68,24 @@ import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 export default {
   name: "timetableweek",
   components: {
-    Drawer,
-    ManageTableWeekDetails,
+    // manageTimetableHeader,
   },
+  props: ["dayName", "dayData"],
   data: () => {
     return {
       func: func,
-      weekData: CONFIG_SCHEDULE.day_of_week,
-      edit: mdiPencil,
-      clock: mdiClockTimeFourOutline,
+      // weekData: CONFIG_SCHEDULE.day_of_week,
       selectTimeRange: START_END_TIME_RANGE, // 開始、終了時刻選択option
       selectTimeDuration: DURATIONS, // 時間枠の長さoption
-      drawerToggle: false,
-      editDayName: "", // 編集する曜日テキスト
-      editDayData: {}, // 編集する日データ
     };
   },
-  methods: {
-    openDrawer(dayData, index) {
-      this.editDayName = index;
-      this.editDayData = dayData;
-      this.drawerToggle = true;
-    },
-    closeDrawer() {
-      this.drawerToggle = false;
-    },
-  },
+  methods: {},
   computed: {},
 };
 </script> 
 
 <style lang="scss" scoped>
-$table-width: 1024px;
+$table-width: 460px;
 $day-width: 40px;
 $active-width: 40px;
 $check-width: 40px;
@@ -136,18 +110,6 @@ $edit-width: 40px;
   font-size: 12px;
   text-align: center;
   color: #696969;
-  .header__day {
-    padding: 8px;
-    width: $day-width;
-  }
-  .header__active {
-    padding: 8px;
-    width: $active-width;
-  }
-  .header__check {
-    padding: 8px;
-    width: $check-width;
-  }
   .header__start-time {
     padding: 8px;
     width: $start-time-width;
@@ -160,10 +122,6 @@ $edit-width: 40px;
     padding: 8px;
     width: $time-width;
   }
-  .header__edit {
-    padding: 8px;
-    width: $edit-width;
-  }
 }
 
 .timetable {
@@ -173,18 +131,6 @@ $edit-width: 40px;
   align-items: center;
   font-size: 14px;
   text-align: center;
-  .table__day {
-    padding: 8px;
-    width: $day-width;
-  }
-  .table__active {
-    padding: 8px;
-    width: $active-width;
-  }
-  .table__check {
-    padding: 8px;
-    width: $check-width;
-  }
   .table__start-time {
     padding: 8px;
     width: $start-time-width;
@@ -196,10 +142,6 @@ $edit-width: 40px;
   .table__time {
     padding: 8px;
     width: $time-width;
-  }
-  .table__edit {
-    padding: 8px;
-    width: $edit-width;
   }
 }
 </style>
