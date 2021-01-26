@@ -1,5 +1,5 @@
 {
-  "name": "vue",
+  "name": "f-manage-tables",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "@mdi/js": "5.9.55",
     "@vue/cli-plugin-babel": "4.1.1",
     "@vue/ui": "0.11.6",
-    "lodash": "4.17.20",
     "firebase": "8.2.4",
+    "lodash": "4.17.20",
     "sass": "1.32.4",
     "sass-loader": "10.1.1",
     "vee-validate": "2.2.10",
@@ -52,10 +52,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "keywords": [
-    "vue",
-    "vuejs",
-    "starter"
-  ],
-  "description": "Vue.js example starter project"
+  "keywords": [],
+  "description": ""
 }
