@@ -1,12 +1,13 @@
 import { DAY_OF_WEEK } from "./api/statics.js";
 
 const func = {
+  // X曜日
   getJpDay(key) {
-    return DAY_OF_WEEK[key.toUpperCase()].label;
+    return key ? DAY_OF_WEEK[key.toUpperCase()].label : "";
   },
-
+  // 曜日一文字
   getJpDayShort(key) {
-    return DAY_OF_WEEK[key.toUpperCase()].shortLabel;
+    return key ? DAY_OF_WEEK[key.toUpperCase()].shortLabel : "";
   }
 };
 
