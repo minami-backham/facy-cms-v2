@@ -1,6 +1,5 @@
 import firebase from "firebase";
 import { encrypt } from "./util/Encrypt.js";
-import { getToday, getTodayObject, formatDateObject } from "./util/DateUtil.js";
 /*
 {
   "id": 10001,
@@ -24,33 +23,33 @@ export const Reserves = () => {
   const db = firebase.database();
 
   /**
-   *　予約一覧を取得
+   *予約一覧を取得
    * {yyyy, mm, dd} 形式で絞り込み
    * 全てnullの場合は全件取得
-   * @param {string*null} year "01"とか２桁の文字列
-   * @param {string*null} month　"01"とか２桁の文字列
-   * @param {string*null} day　"01"とか２桁の文字列
+   * @param {string*null} year //"01"とか２桁の文字列
+   * @param {string*null} month //"01"とか２桁の文字列
+   * @param {string*null} day //"01"とか２桁の文字列
    */
   const getReserves = ({ year, month, day }) => {
-    return new Promise(async (resolved) => {
+    return new Promise((resolved) => {
       let ref = null;
       if (year && !month && !day) {
-        ref = await db
+        ref = db
           .ref("/reserves")
           .orderByChild("date_yyyy")
           .equalTo(`${year}`);
       } else if (year && month && !day) {
-        ref = await db
+        ref = db
           .ref("/reserves")
           .orderByChild("date_yyyymm")
           .equalTo(`${year}${month}`);
       } else if (year && month && day) {
-        ref = await db
+        ref = db
           .ref("/reserves")
           .orderByChild("date_yyyymmdd")
           .equalTo(`${year}${month}${day}`);
       } else {
-        ref = await db.ref("/reserves");
+        ref = db.ref("/reserves");
       }
       ref.on("value", (snapshot) => {
         const _reserves = snapshot.val();
@@ -67,7 +66,7 @@ export const Reserves = () => {
               id: _reserves[key].id,
               start_time: _reserves[key].start_time,
               user_mail: _reserves[key].user_mail,
-              delete: _reserves[key].delete
+              delete: _reserves[key].delete,
             };
           });
         resolved(reserves);
@@ -83,7 +82,7 @@ export const Reserves = () => {
    * @param {string} user_mail メール
    */
   const setNewReserve = ({ reserve_date, start_time, end_time, email }) => {
-    return new Promise(async (resolved) => {
+    return new Promise((resolved) => {
       const _reserve_date = `${reserve_date}`.split("-");
       const _date = new Date(
         _reserve_date[0],
@@ -104,7 +103,7 @@ export const Reserves = () => {
         end_time_hour: end_time.split(":")[0],
         end_time_day: end_time.split(":")[1],
         user_mail: email,
-        delete: false
+        delete: false,
       };
       db.ref("reserves/" + id).set(params, (error) => {
         if (error) {
@@ -126,7 +125,7 @@ export const Reserves = () => {
    * @param {string} user_mail メール
    */
   const updateReserve = ({ id, reserve_date, start_time, end_time, email }) => {
-    return new Promise(async (resolved) => {
+    return new Promise((resolved) => {
       const _reserve_date = `${reserve_date}`.split("-");
       const params = {
         date: reserve_date,
@@ -139,7 +138,7 @@ export const Reserves = () => {
         end_time,
         end_time_hour: end_time.split(":")[0],
         end_time_day: end_time.split(":")[1],
-        user_mail: email
+        user_mail: email,
       };
       db.ref("reserves/" + id).update(params, (error) => {
         if (error) {
@@ -154,7 +153,7 @@ export const Reserves = () => {
   };
 
   const deleteReserve = ({ id }) => {
-    return new Promise(async (resolved) => {
+    return new Promise((resolved) => {
       db.ref("reserves/" + id).update({ delete: true }, (error) => {
         if (error) {
           resolved({ result: false, error });
@@ -169,6 +168,6 @@ export const Reserves = () => {
     getReserves,
     setNewReserve,
     updateReserve,
-    deleteReserve
+    deleteReserve,
   };
 };

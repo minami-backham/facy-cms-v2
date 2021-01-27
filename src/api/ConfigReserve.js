@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import { DAY_OF_WEEK } from "./statics.js";
 //json
 //https://github.com/masahiro8/facy-cms-v2/blob/main/public/json/config_schedule.json
 
@@ -15,15 +14,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Tuesday: {
       active: true,
@@ -35,15 +34,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Wednesday: {
       active: true,
@@ -55,15 +54,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Thursday: {
       active: true,
@@ -75,15 +74,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Friday: {
       active: true,
@@ -95,15 +94,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Saturday: {
       active: true,
@@ -115,15 +114,15 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
+          end: "11:00",
+        },
+      ],
     },
     Sunday: {
       active: true,
@@ -135,16 +134,16 @@ const config_reserves_format = {
           timeid: 1,
           active: true,
           start: "10:00",
-          end: "10:30"
+          end: "10:30",
         },
         {
           timeid: 2,
           active: true,
           start: "10:30",
-          end: "11:00"
-        }
-      ]
-    }
+          end: "11:00",
+        },
+      ],
+    },
   },
   date: {
     "2020": {
@@ -156,27 +155,27 @@ const config_reserves_format = {
               timeid: 1,
               active: true,
               start: "10:00",
-              end: "10:30"
+              end: "10:30",
             },
             {
               timeid: 2,
               active: true,
               start: "10:30",
-              end: "11:00"
-            }
-          ]
-        }
-      }
-    }
-  }
+              end: "11:00",
+            },
+          ],
+        },
+      },
+    },
+  },
 };
 
 export const ConfigReserve = () => {
   const db = firebase.database();
 
   const init = () => {
-    return new Promise(async (resolved) => {
-      await db.ref("/config_reserves").set(config_reserves_format, (error) => {
+    return new Promise((resolved) => {
+      db.ref("/config_reserves").set(config_reserves_format, (error) => {
         if (error) {
           resolved({ result: false, error });
         } else {
@@ -199,8 +198,8 @@ export const ConfigReserve = () => {
 
   //全件
   const get = () => {
-    return new Promise(async (resolved) => {
-      const ref = await db.ref("/config_reserves");
+    return new Promise((resolved) => {
+      const ref = db.ref("/config_reserves");
       ref.on("value", (snapshot) => {
         const _values = snapshot.val();
         resolved(_values);
@@ -212,8 +211,8 @@ export const ConfigReserve = () => {
   const getDate = ({ year, month, day }) => {
     const path = getResevePath([year, month, day], "/config_reserves/date");
     console.log("path = ", path);
-    return new Promise(async (resolved) => {
-      const ref = await db.ref(path);
+    return new Promise((resolved) => {
+      const ref = db.ref(path);
       ref.on("value", (snapshot) => {
         const _values = snapshot.val();
         resolved(_values);
@@ -223,8 +222,8 @@ export const ConfigReserve = () => {
 
   //週の設定を取得
   const getDayOfWeek = (day) => {
-    return new Promise(async (resolved) => {
-      const ref = await db.ref(
+    return new Promise((resolved) => {
+      const ref = db.ref(
         day
           ? `/config_reserves/day_of_week/${day}`
           : "/config_reserves/day_of_week"
@@ -238,10 +237,10 @@ export const ConfigReserve = () => {
 
   //曜日単位で更新
   const updateDayOfWeek = async (params) => {
-    return new Promise(async (resolved) => {
-      const reserves = await get();
+    return new Promise((resolved) => {
+      const reserves = get();
       const day_of_week = Object.assign(reserves.day_of_week, params);
-      await db.ref("/config_reserves/day_of_week").set(day_of_week, (error) => {
+      db.ref("/config_reserves/day_of_week").set(day_of_week, (error) => {
         if (error) {
           resolved({ result: false, error });
         } else {
@@ -275,8 +274,8 @@ export const ConfigReserve = () => {
 
   const setDate = async ({ year, month, day, params }) => {
     console.log("params = ", params);
-    return new Promise(async (resolved) => {
-      const reserves = await get();
+    return new Promise((resolved) => {
+      const reserves = get();
       //再帰的に登録できるキーを抽出
       const { path, param } = reqKey(
         { ...reserves.date },
@@ -285,7 +284,7 @@ export const ConfigReserve = () => {
         params
       );
       console.log("path = ", path, param);
-      await db.ref(path).update(param, (error) => {
+      db.ref(path).update(param, (error) => {
         if (error) {
           resolved({ result: false, error });
         } else {
@@ -301,6 +300,6 @@ export const ConfigReserve = () => {
     getDate,
     getDayOfWeek,
     updateDayOfWeek,
-    setDate
+    setDate,
   };
 };

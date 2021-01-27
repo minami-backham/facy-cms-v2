@@ -3,7 +3,7 @@ import firebase from "firebase";
 //ユーザー管理
 //https://firebase.google.com/docs/auth/web/manage-users?hl=ja
 
-//書き込み　呼び出し
+//書き込み/呼び出し
 //https://firebase.google.com/docs/database/web/read-and-write#basic_write
 
 //パスワード再設定メール
@@ -14,7 +14,7 @@ const getUserParam = (_user) => {
     name: _user.displayName,
     email: _user.email,
     emailVerified: _user.emailVerified,
-    uid: _user.uid // The user's ID, unique to the Firebase project. Do NOT use
+    uid: _user.uid, // The user's ID, unique to the Firebase project. Do NOT use
     // this value to authenticate with your backend server, if
     // you have one. Use User.getToken() instead.
   };
@@ -30,7 +30,7 @@ export const UserAuth = () => {
     return new Promise((resolved) => {
       auth
         .createUserWithEmailAndPassword(email, password)
-        .then(async (user) => {
+        .then(async () => {
           const _user = auth.currentUser;
           const user_param = getUserParam(_user);
           user_idtoken = await getIdToken();
@@ -39,17 +39,17 @@ export const UserAuth = () => {
             token: user_idtoken,
             email: _user.email,
             name,
-            roll
+            roll,
           });
           resolved({
             result: true,
-            user: user_param
+            user: user_param,
           });
         })
         .catch((error) => {
           resolved({
             result: false,
-            error
+            error,
           });
         });
     });
@@ -57,17 +57,17 @@ export const UserAuth = () => {
   const login = ({ email, password }) => {
     return new Promise((resolved) => {
       auth.signInWithEmailAndPassword(email, password).then(
-        async (user) => {
+        async () => {
           user_profile = await getLoggedinUserProfileOnce();
           resolved({
             result: true,
-            user: user_profile
+            user: user_profile,
           });
         },
         (error) => {
           resolved({
             result: false,
-            error
+            error,
           });
         }
       );
@@ -99,6 +99,7 @@ export const UserAuth = () => {
           resolved(idToken);
         })
         .catch((error) => {
+          console.log(error);
           resolved(null);
         });
     });
@@ -118,7 +119,7 @@ export const UserAuth = () => {
       username: name,
       token,
       roll,
-      email
+      email,
     });
   };
 
@@ -134,18 +135,18 @@ export const UserAuth = () => {
    * }
    */
   const getLoggedinUserProfileOnce = () => {
-    return new Promise(async (resolved) => {
+    return new Promise((resolved) => {
       const user = auth.currentUser;
       if (!user) {
         //未ログイン
         resolved(null);
       } else {
         let user_param = getUserParam(user);
-        const snapshot = await db.ref("/users/" + user.uid).once("value");
+        const snapshot = db.ref("/users/" + user.uid).once("value");
         if (snapshot.val()) {
           user_param = Object.assign(user_param, {
             username: snapshot.val().username,
-            roll: snapshot.val().roll
+            roll: snapshot.val().roll,
           });
           resolved(user_param);
         } else {
@@ -161,9 +162,9 @@ export const UserAuth = () => {
    *
    */
   const getLoggedinUserProfile = async () => {
-    return new Promise(async (resolved) => {
-      auth.onAuthStateChanged(async (user) => {
-        const user_profile = await getLoggedinUserProfileOnce();
+    return new Promise((resolved) => {
+      auth.onAuthStateChanged(() => {
+        const user_profile = getLoggedinUserProfileOnce();
         if (user_profile) {
           resolved(user_profile);
         } else {
@@ -200,6 +201,6 @@ export const UserAuth = () => {
     login,
     logout,
     getLoggedinUserProfile,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
   };
 };

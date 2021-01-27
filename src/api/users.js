@@ -1,14 +1,14 @@
 import firebase from "firebase";
 
-//Firebase データベース　クエリ
+//Firebase_データベース_クエリ
 //https://firebase.google.com/docs/database/admin/retrieve-data?hl=ja#top_of_page
 
 export const Users = () => {
   const db = firebase.database();
 
-  const getUsers = (order) => {
-    return new Promise(async (resolved) => {
-      const ref = await db.ref("/users");
+  const getUsers = () => {
+    return new Promise((resolved) => {
+      const ref = db.ref("/users");
       ref.on("value", (snapshot) => {
         const _users = snapshot.val();
         const users = Object.keys(_users).map((key) => {
@@ -17,7 +17,7 @@ export const Users = () => {
             username: user.username,
             roll: user.roll,
             uid: user.uid,
-            email: user.email
+            email: user.email,
           };
         });
         resolved(users);
@@ -26,12 +26,12 @@ export const Users = () => {
   };
 
   const updateUserProfile = async ({ uid, name, roll, email }) => {
-    return new Promise(async (resolved) => {
-      const result = await db.ref("users/" + uid).update(
+    return new Promise((resolved) => {
+      db.ref("users/" + uid).update(
         {
           username: name,
           roll,
-          email
+          email,
         },
         (error) => {
           if (error) {
@@ -46,6 +46,6 @@ export const Users = () => {
 
   return {
     getUsers,
-    updateUserProfile
+    updateUserProfile,
   };
 };
