@@ -13,7 +13,7 @@
       </div>
       <div class="manage-table__content">
         <div class="timetable" v-for="(day, index) in weekData" :key="index">
-          <div class="table__day">{{ func.getJpDay(index) }}</div>
+          <div class="table__day">{{ func.getJpDayShort(index) }}</div>
           <div class="table__active">
             <v-btn icon>
               <v-icon>{{ clock }}</v-icon>

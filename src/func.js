@@ -1,15 +1,12 @@
+import { DAY_OF_WEEK } from "./api/statics.js";
+
 const func = {
   getJpDay(key) {
-    const jpDays = {
-      Monday: "月",
-      Tuesday: "火",
-      Wednesday: "水",
-      Thursday: "木",
-      Friday: "金",
-      Saturday: "土",
-      Sunday: "日"
-    };
-    return jpDays[key];
+    return DAY_OF_WEEK[key.toUpperCase()].label;
+  },
+
+  getJpDayShort(key) {
+    return DAY_OF_WEEK[key.toUpperCase()].shortLabel;
   }
 };
 

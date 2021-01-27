@@ -1,12 +1,12 @@
 <template>
   <div class="manage-table">
-    <div class="manage-table-title">
-      <v-checkbox
-        v-model="dayData.active"
-        :label="`${func.getJpDay(dayName)}曜日`"
-      ></v-checkbox>
-    </div>
     <div class="manage-table-inner">
+      <div class="manage-table__title">
+        <v-checkbox
+          v-model="dayData.active"
+          :label="`${func.getJpDay(dayName)}`"
+        ></v-checkbox>
+      </div>
       <div class="manage-table__header">
         <div class="header__start-time">開始時刻</div>
         <div class="header__end-time">終了時刻</div>
