@@ -1,19 +1,26 @@
 <template>
-  <v-navigation-drawer v-model="toggle" :width="480" absolute temporary right>
+  <v-navigation-drawer
+    v-model="toggleStatus"
+    :width="480"
+    absolute
+    temporary
+    right
+  >
     <slot />
   </v-navigation-drawer>
 </template>
 
 <script>
 export default {
-  props: ["toggle"],
   props: {
-    toggle: Boolean,
+    toggle: { type: Boolean },
   },
-  watch: {
-    toggle: {
-      immediate: true,
-      handler: function (newValue) {
+  computed: {
+    toggleStatus: {
+      get() {
+        return this.toggle;
+      },
+      set(newValue) {
         if (!newValue) {
           this.$emit("close");
         }
