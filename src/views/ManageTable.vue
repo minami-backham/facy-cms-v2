@@ -1,6 +1,5 @@
 <template>
   <div class="schedule">
-    <v-btn to="">保存</v-btn>
     <ManageTableWeek />
   </div>
 </template>

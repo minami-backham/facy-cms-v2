@@ -1,5 +1,6 @@
 <template>
   <div class="manage-table">
+    <v-btn to="">保存</v-btn>
     <div class="manage-table-title">曜日</div>
     <div class="manage-table-inner">
       <div class="manage-table__header">
@@ -60,7 +61,10 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableWeekDetails :dayName="editDayName" :dayData="editDayData" />
+        <ManageTableWeekDetails
+          :dayName="editDayName"
+          :dayDataProp="editDayData"
+        />
       </Drawer>
     </div>
   </div>
@@ -83,7 +87,7 @@ export default {
     Drawer,
     ManageTableWeekDetails,
   },
-  data: () => {
+  data() {
     return {
       func: func,
       weekData: CONFIG_SCHEDULE.day_of_week,
