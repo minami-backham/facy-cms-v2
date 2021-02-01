@@ -1,6 +1,5 @@
 <template>
   <div class="manage-table">
-    <v-btn to="">保存</v-btn>
     <div class="manage-table-title">曜日</div>
     <div class="manage-table-inner">
       <div class="manage-table__header">
@@ -10,23 +9,29 @@
         <div class="header__start-time">開始時刻</div>
         <div class="header__end-time">終了時刻</div>
         <div class="header__time">時間</div>
-        <div class="header__edit"></div>
+        <div class="header__edit">詳細</div>
       </div>
       <div class="manage-table__content">
         <div class="timetable" v-for="(day, index) in weekData" :key="index">
-          <div class="table__day">{{ func.getJpDayShort(index) }}</div>
+          <div class="table__day">
+            {{ funcManageTable.getJpDayShort(index) }}
+          </div>
           <div class="table__active">
-            <v-btn icon>
-              <v-icon>{{ clock }}</v-icon>
-            </v-btn>
+            <v-icon title="編集中" v-show="editStatus[index]">{{
+              clock
+            }}</v-icon>
           </div>
           <div class="table__check">
-            <v-checkbox v-model="weekData[index].active"></v-checkbox>
+            <v-checkbox
+              v-model="day.active"
+              @change="onChange(index)"
+            ></v-checkbox>
           </div>
           <div class="table__start-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].start_time"
+              v-model="day.start_time"
+              @change="onTimeChange(index)"
               filled
               dense
             ></v-select>
@@ -34,7 +39,8 @@
           <div class="table__end-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].end_time"
+              v-model="day.end_time"
+              @change="onTimeChange(index)"
               filled
               dense
             ></v-select>
@@ -42,8 +48,9 @@
           <div class="table__time">
             <v-select
               :items="selectTimeDuration"
-              item-text="`${weekData[index].time}分`"
-              v-model="weekData[index].time"
+              item-text="`${day.time}分`"
+              v-model="day.time"
+              @change="onTimeChange(index)"
               filled
               dense
             >
@@ -53,7 +60,7 @@
             </v-select>
           </div>
           <div class="table__edit">
-            <v-btn icon @click="openDrawer(weekData[index], index)">
+            <v-btn icon @click="openDrawer(day, index)">
               <v-icon>{{ edit }}</v-icon>
             </v-btn>
           </div>
@@ -61,9 +68,10 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableWeekDetails
+        <ManageTableDetails
           :dayName="editDayName"
           :dayDataProp="editDayData"
+          @show-edit-status="showEditStatus"
         />
       </Drawer>
     </div>
@@ -71,13 +79,13 @@
 </template>
 <script>
 import * as _ from "lodash";
-import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
 import Drawer from "./Drawer.vue";
-import ManageTableWeekDetails from "./ManageTableWeekDetails.vue";
+import ManageTableDetails from "./ManageTableDetails.vue";
 import { mdiPencil } from "@mdi/js";
 import { mdiClockTimeFourOutline } from "@mdi/js";
-import func from "../func.js";
+import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
+import { DAY_OF_WEEK } from "../api/statics.js";
 
 // import manageTimetableHeader from "../components/manageTimetableHeader.vue";
 
@@ -85,12 +93,15 @@ export default {
   name: "timetableweek",
   components: {
     Drawer,
-    ManageTableWeekDetails,
+    ManageTableDetails,
+  },
+  props: {
+    configData: Object,
   },
   data() {
     return {
-      func: func,
-      weekData: CONFIG_SCHEDULE.day_of_week,
+      funcManageTable: funcManageTable,
+      weekData: {},
       edit: mdiPencil,
       clock: mdiClockTimeFourOutline,
       selectTimeRange: START_END_TIME_RANGE, // 開始、終了時刻選択option
@@ -98,9 +109,49 @@ export default {
       drawerToggle: false,
       editDayName: "", // 編集する曜日テキスト
       editDayData: {}, // 編集する日データ
+      editStatus: this.initEditStatus(),
     };
   },
+  mounted() {
+    this.weekData = this.configData;
+  },
+  watch: {
+    // data()で入ってこないのでwatch
+    configData: {
+      immediate: true,
+      handler: function (newVal) {
+        this.weekData = newVal;
+      },
+    },
+  },
   methods: {
+    initEditStatus() {
+      // 各日の編集状態init
+      const days = _.map(DAY_OF_WEEK, (day) => day.id);
+      let obj = {};
+      days.forEach((day) => {
+        obj[day] = false;
+      });
+      return obj;
+    },
+    onChange(index) {
+      // 編集ステータス変更
+      this.showEditStatus(index);
+    },
+    onTimeChange(index) {
+      // 時間系の変更あれば変更日の時間枠を再生成
+      console.log("onTimeCHange", index);
+      this.weekData[index].detail = this.funcManageTable.rebuildTimeTable(
+        this.weekData[index]
+      );
+      // 編集ステータス変更
+      console.log("editStatus", this.editStatus[index]);
+      this.showEditStatus(index);
+    },
+    showEditStatus(index) {
+      // 編集中status
+      this.editStatus[index] = true;
+    },
     openDrawer(dayData, index) {
       this.editDayName = index;
       this.editDayData = dayData;
