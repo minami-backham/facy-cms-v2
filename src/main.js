@@ -27,11 +27,21 @@ Vue.use(VeeValidate, { locale: ja });
 
 Vue.config.productionTip = false;
 
+// condesandbox
 /* eslint-disable no-new */
+// new Vue({
+//   router,
+//   vuetify: new Vuetify(opts),
+//   el: "#app",
+//   components: { App },
+//   template: "<App/>"
+// });
+
+// localhost
 new Vue({
+  render: h => h(App),
+  store,
   router,
+  components: { App }
   vuetify: new Vuetify(opts),
-  el: "#app",
-  components: { App },
-  template: "<App/>"
-});
+}).$mount('#app')
