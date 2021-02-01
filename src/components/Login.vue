@@ -21,6 +21,11 @@
     <div class="button-container">
       <v-btn color="error" class="button mr-4">　ログイン　</v-btn>
     </div>
+    <div class="link-reset-container">
+      <router-link class="link-reset" to="/reset"
+        >パスワードを再設定する</router-link
+      >
+    </div>
   </div>
 </template>
 
@@ -55,6 +60,16 @@ export default {
       background-color: red;
       color: white;
       width: 100%;
+    }
+  }
+
+  .link-reset-container {
+    text-align: center;
+    margin-top: 30px;
+
+    .link-reset {
+      text-decoration: none;
+      color: black;
     }
   }
 }
