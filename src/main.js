@@ -40,7 +40,6 @@ Vue.config.productionTip = false;
 // localhost
 new Vue({
   render: h => h(App),
-  store,
   router,
   components: { App },
   vuetify: new Vuetify(opts),
