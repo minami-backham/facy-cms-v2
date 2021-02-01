@@ -1,25 +1,17 @@
 <template>
   <div>
     <div class="reset-password" :ref="reset_password">
+      <div class="message-container">
+        <p>パスワードを再設定します。</p>
+        <p>登録しているメールアドレスを入力してください。</p>
+      </div>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
           class="cols-4"
-          v-model="password"
-          :rules="passwordRules"
-          type="password"
-          label="新しいパスワード"
-          v-validate="'required'"
-          name="password"
-          ref="password"
-        ></v-text-field>
-        <v-text-field
-          class="cols-4 comfirm_password"
-          v-model="repassword"
-          type="password"
-          label="新しいパスワードをもう一度入力"
-          v-validate="'required|confirmed:password'"
-          name="password_confirmation"
-          data-vv-as="password"
+          v-model="email"
+          :rules="emailRules"
+          label="メールアドレス"
+          required
         ></v-text-field>
       </v-form>
 
@@ -34,7 +26,7 @@
       </div>
 
       <div class="button-container">
-        <v-btn class="button mr-4" @click="checkPassword()"
+        <v-btn class="button mr-4" @click="submitResetPasswordEmail()"
           >パスワードを変更</v-btn
         >
       </div>
@@ -46,29 +38,16 @@
 export default {
   data: () => ({
     valid: false,
-    password: "",
-    passwordRules: [
-      (v) => 8 <= v.length || "８文字以上のパスワードを入力してください",
+    email: "",
+    emailRules: [
+      (v) => !!v || "メールアドレスの入力は必須です",
+      (v) => /.+@.+/.test(v) || "有効なメールアドレスを入力してください",
     ],
-    repassword: "",
-    isActive: true,
   }),
   methods: {
-    checkPassword() {
-      if (this.password == "" && this.repassword == "") {
-        alert("パスワードが入力されていません");
-      } else if (this.password !== this.repassword) {
-        alert("パスワードが一致しませ。もう一度入力");
-        this.clearForm();
-      } else {
-        alert("パスワード一致");
-        this.clearForm();
-      }
-      this.clearForm();
-    },
-    clearForm() {
-      this.password = "";
-      this.repassword = "";
+    submitResetPasswordEmail() {
+      alert("再設定メールを送信しました");
+      this.$router.push("/login");
     },
   },
 };
@@ -79,6 +58,12 @@ export default {
   padding: 20px;
   width: 300px;
   margin: 200px auto;
+
+  .message-container {
+    text-align: center;
+    margin: 30px 0;
+    font-size: 13px;
+  }
 
   .comfirm_password {
     height: 50px;
