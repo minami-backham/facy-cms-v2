@@ -70,7 +70,7 @@
   </div>
 </template>
 <script>
-import * as _ from "lodash";
+// import * as _ from "lodash";
 // import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
 import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
