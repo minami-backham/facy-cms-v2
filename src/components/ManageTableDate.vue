@@ -159,7 +159,7 @@ export default {
       this.activeDates = dateArrayActive.map((item) => {
         return {
           start: item,
-          name: `<v-icon>clock</v-icon>`,
+          name: "🕓",
         };
       });
     },
@@ -178,96 +178,16 @@ export default {
 };
 </script> 
 
-<style lang="scss" scoped>
-$table-width: 1024px;
-$day-width: 40px;
-$active-width: 40px;
-$check-width: 40px;
-$start-time-width: 128px;
-$end-time-width: 128px;
-$time-width: 128px;
-$edit-width: 40px;
-
-.manage-table {
-  overflow: scroll;
-}
-
-.manage-table-inner {
-  width: $table-width;
-}
-
-.manage-table__header {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 12px;
-  text-align: center;
-  color: #696969;
-  .header__day {
-    padding: 8px;
-    width: $day-width;
-  }
-  .header__active {
-    padding: 8px;
-    width: $active-width;
-  }
-  .header__check {
-    padding: 8px;
-    width: $check-width;
-  }
-  .header__start-time {
-    padding: 8px;
-    width: $start-time-width;
-  }
-  .header__end-time {
-    padding: 8px;
-    width: $end-time-width;
-  }
-  .header__time {
-    padding: 8px;
-    width: $time-width;
-  }
-  .header__edit {
-    padding: 8px;
-    width: $edit-width;
-  }
-}
-
-.timetable {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 14px;
-  text-align: center;
-  .table__day {
-    padding: 8px;
-    width: $day-width;
-  }
-  .table__active {
-    padding: 8px;
-    width: $active-width;
-  }
-  .table__check {
-    padding: 8px;
-    width: $check-width;
-  }
-  .table__start-time {
-    padding: 8px;
-    width: $start-time-width;
-  }
-  .table__end-time {
-    padding: 8px;
-    width: $end-time-width;
-  }
-  .table__time {
-    padding: 8px;
-    width: $time-width;
-  }
-  .table__edit {
-    padding: 8px;
-    width: $edit-width;
+<style lang="scss">
+.v-application {
+  .v-calendar-weekly__day {
+    .primary {
+      background: transparent !important;
+      .pl-1 {
+        text-align: center;
+        font-size: 14px;
+      }
+    }
   }
 }
 </style>
