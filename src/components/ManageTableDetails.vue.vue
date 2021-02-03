@@ -5,7 +5,6 @@
       <div class="manage-table__title">
         <v-checkbox
           v-model="dayData.active"
-          @change="onChange"
           :label="`${funcManageTable.getJpDay(dayName)}`"
         ></v-checkbox>
       </div>
@@ -62,7 +61,6 @@
           <v-checkbox
             v-model="time.active"
             :label="`${time.start} - ${time.end}`"
-            @change="onChange"
           ></v-checkbox>
         </span>
       </div>
@@ -87,7 +85,6 @@ export default {
     return {
       funcManageTable: funcManageTable,
       dayData: {},
-      // weekData: CONFIG_SCHEDULE.day_of_week,
       selectTimeRange: START_END_TIME_RANGE, // 開始、終了時刻選択option
       selectTimeDuration: DURATIONS, // 時間枠の長さoption
     };
@@ -96,15 +93,9 @@ export default {
     this.dayData = this.dayDataProp;
   },
   methods: {
-    onChange() {
-      // 編集ステータス変更
-      this.$emit("show-edit-status", this.dayName);
-    },
     onTimeChange() {
       // 時間系の変更あれば時間枠を再生成
       this.dayData.detail = this.funcManageTable.rebuildTimeTable(this.dayData);
-      // 編集ステータス変更
-      this.$emit("show-edit-status", this.dayName);
     },
   },
   watch: {

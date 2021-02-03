@@ -485,9 +485,12 @@
   },
   "date": {
     "2021": {
-      "2": {
-        "1": {
-          "active": true,
+      "02": {
+        "22": {
+          "active": false,
+          "start_time": "10:00",
+          "end_time": "13:00",
+          "time": "30",
           "detail": [
             {
               "timeid": 1,
@@ -524,48 +527,6 @@
               "active": true,
               "start": "12:30",
               "end": "13:00"
-            },
-            {
-              "timeid": 7,
-              "active": true,
-              "start": "13:30",
-              "end": "14:00"
-            },
-            {
-              "timeid": 8,
-              "active": true,
-              "start": "14:00",
-              "end": "14:30"
-            },
-            {
-              "timeid": 9,
-              "active": true,
-              "start": "14:30",
-              "end": "15:00"
-            },
-            {
-              "timeid": 10,
-              "active": true,
-              "start": "15:00",
-              "end": "15:30"
-            },
-            {
-              "timeid": 11,
-              "active": true,
-              "start": "15:30",
-              "end": "16:00"
-            },
-            {
-              "timeid": 12,
-              "active": true,
-              "start": "16:00",
-              "end": "16:30"
-            },
-            {
-              "timeid": 13,
-              "active": true,
-              "start": "16:30",
-              "end": "17:00"
             }
           ]
         }

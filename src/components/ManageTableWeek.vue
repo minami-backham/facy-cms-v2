@@ -22,10 +22,7 @@
             }}</v-icon>
           </div>
           <div class="table__check">
-            <v-checkbox
-              v-model="day.active"
-              @change="onChange(index)"
-            ></v-checkbox>
+            <v-checkbox v-model="day.active"></v-checkbox>
           </div>
           <div class="table__start-time">
             <v-select
@@ -68,11 +65,7 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableDetails
-          :dayName="editDayName"
-          :dayDataProp="editDayData"
-          @show-edit-status="showEditStatus"
-        />
+        <ManageTableDetails :dayName="editDayName" :dayDataProp="editDayData" />
       </Drawer>
     </div>
   </div>
@@ -109,7 +102,7 @@ export default {
       drawerToggle: false,
       editDayName: "", // 編集する曜日テキスト
       editDayData: {}, // 編集する日データ
-      editStatus: this.initEditStatus(),
+      editStatus: this.initModifiedStatus(),
     };
   },
   mounted() {
@@ -123,10 +116,18 @@ export default {
         this.weekData = newVal;
       },
     },
+    weekData: {
+      immediate: true,
+      deep: true,
+      handler: function () {
+        console.log("watch weekdata");
+        this.checkIfModified();
+      },
+    },
   },
   methods: {
-    initEditStatus() {
-      // 各日の編集状態init
+    initModifiedStatus() {
+      // 各曜日のiconステータスinit
       const days = _.map(DAY_OF_WEEK, (day) => day.id);
       let obj = {};
       days.forEach((day) => {
@@ -134,23 +135,20 @@ export default {
       });
       return obj;
     },
-    onChange(index) {
-      // 編集ステータス変更
-      this.showEditStatus(index);
-    },
     onTimeChange(index) {
       // 時間系の変更あれば変更日の時間枠を再生成
       console.log("onTimeCHange", index);
       this.weekData[index].detail = this.funcManageTable.rebuildTimeTable(
         this.weekData[index]
       );
-      // 編集ステータス変更
-      console.log("editStatus", this.editStatus[index]);
-      this.showEditStatus(index);
     },
-    showEditStatus(index) {
-      // 編集中status
-      this.editStatus[index] = true;
+    showIcon(key) {
+      // icon表示
+      this.editStatus[key] = true;
+    },
+    removeIcon(key) {
+      // icon非表示
+      this.editStatus[key] = false;
     },
     openDrawer(dayData, index) {
       this.editDayName = index;
@@ -160,8 +158,28 @@ export default {
     closeDrawer() {
       this.drawerToggle = false;
     },
+
+    checkIfModified() {
+      // 時間枠修正status（時計icon）check
+      _.forEach(this.weekData, (day, index) => {
+        // activeではない日は表示しない
+        if (day.active == false) {
+          this.removeIcon(index);
+          return;
+        }
+
+        // detail内に無効化された時間枠がある or not
+        const activeTables = day.detail.filter((d) => {
+          return d.active;
+        });
+        if (activeTables.length < day.detail.length) {
+          this.showIcon(index);
+        } else {
+          this.removeIcon(index);
+        }
+      });
+    },
   },
-  computed: {},
 };
 </script> 
 
