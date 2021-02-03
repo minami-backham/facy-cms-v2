@@ -120,7 +120,6 @@ export default {
       immediate: true,
       deep: true,
       handler: function () {
-        console.log("watch weekdata");
         this.checkIfModified();
       },
     },

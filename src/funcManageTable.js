@@ -66,6 +66,12 @@ const funcManageTable = {
     return key ? DAY_OF_WEEK[key.toUpperCase()].shortLabel : "";
   },
 
+  // YYYY-MM-DD を分割
+  getYMD(_date) {
+    return _date.match(/(\d{4})-(\d{2})-(\d{2})/).slice(1);
+  },
+
+  // timetabe再生成
   rebuildTimeTable(dayData) {
     const arr = startTimes(dayData).map((_time, index) => {
       return {
@@ -78,6 +84,7 @@ const funcManageTable = {
     // console.log("rebuildTimeTable", arr);
     return arr;
   }
+  
 };
 
 export default funcManageTable;
