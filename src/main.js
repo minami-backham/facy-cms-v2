@@ -3,6 +3,7 @@
 import Vue from "vue";
 import App from "./App";
 import router from "./router";
+import { initFirebase } from "./api/api";
 
 // for vuetify
 import Vuetify from "vuetify";
@@ -25,6 +26,7 @@ const opts = {
 Validator.localize("ja", ja);
 Vue.use(VeeValidate, { locale: ja });
 
+initFirebase();
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

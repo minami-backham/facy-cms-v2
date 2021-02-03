@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import {UserAuth} from "@/api/userAuth.js";
 export default {
   data: () => ({
     valid: false,
@@ -45,7 +46,12 @@ export default {
     ],
   }),
   methods: {
-    submitResetPasswordEmail() {
+    async submitResetPasswordEmail() {
+         const params = {
+        email: this.email,
+      };
+      const result = await UserAuth().sendPasswordResetEmail(params);
+      this.result = JSON.stringify(result);
       alert("再設定メールを送信しました");
       this.$router.push("/login");
     },
