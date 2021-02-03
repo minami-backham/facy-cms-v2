@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reset-password" :ref="reset_password">
+    <div class="reset-password">
       <div class="message-container">
         <p>パスワードを再設定します。</p>
         <p>登録しているメールアドレスを入力してください。</p>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {UserAuth} from "@/api/userAuth.js";
+import { UserAuth } from "@/api/userAuth.js";
 export default {
   data: () => ({
     valid: false,
@@ -47,13 +47,17 @@ export default {
   }),
   methods: {
     async submitResetPasswordEmail() {
-         const params = {
+      const params = {
         email: this.email,
       };
       const result = await UserAuth().sendPasswordResetEmail(params);
       this.result = JSON.stringify(result);
-      alert("再設定メールを送信しました");
-      this.$router.push("/login");
+      if (result.result === false) {
+        alert("登録しているメールアドレスを入力してください");
+      } else if (result.result === true) {
+        alert("再設定メールを送信しました");
+        this.$router.push("/login");
+      }
     },
   },
 };

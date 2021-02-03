@@ -55,6 +55,14 @@ export default {
         password: this.password,
       };
       const result = await UserAuth().login(params);
+      if (result.error) {
+        alert("パスワードもしくはメールアドレスが間違っています。");
+        this.clearForm();
+      }
+    },
+    clearForm() {
+      this.email = "";
+      this.password = "";
     },
   },
 };
