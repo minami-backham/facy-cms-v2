@@ -14,6 +14,9 @@ import VeeValidate, { Validator } from "vee-validate";
 // 日本語ファイルを読み込み
 import ja from "vee-validate/dist/locale/ja";
 
+// for firebase
+import { initFirebase } from "@/api/api";
+
 Vue.use(Vuetify);
 Vue.use(VeeValidate);
 
@@ -26,7 +29,10 @@ const opts = {
 Validator.localize("ja", ja);
 Vue.use(VeeValidate, { locale: ja });
 
+
+// firebase
 initFirebase();
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
