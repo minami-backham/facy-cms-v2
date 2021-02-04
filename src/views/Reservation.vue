@@ -17,6 +17,7 @@
           required
         ></v-text-field>
 
+        <!-- TODO:過去の日付を選択できないようにする -->
         <v-menu
           ref="menu"
           v-model="menu"
@@ -62,7 +63,6 @@
           return-object
         ></v-select>
 
-        <!-- TODO:確認ボタンを押した時の処理を追加 -->
         <v-btn
           class="mt-4 white--text"
           :disabled="!valid"
@@ -70,20 +70,75 @@
           block
           large
           depressed
-          @click="validate"
+          @click.stop="validate"
         >
           確認
         </v-btn>
       </v-form>
     </v-sheet>
+
+    <v-dialog v-model="dialog" fullscreen hide-overlay>
+      <v-card class="d-flex align-center" height="100%">
+        <v-sheet class="mx-auto" width="300">
+          <v-card-title class="headline"> 確認画面 </v-card-title>
+
+          <v-card-text>
+            <v-text-field v-model="name" label="名前" disabled></v-text-field>
+
+            <v-text-field
+              class="mt-4"
+              v-model="email"
+              label="メールアドレス"
+              disabled
+            ></v-text-field>
+
+            <v-text-field
+              class="mt-4"
+              v-model="dateText"
+              label="日付"
+              disabled
+            ></v-text-field>
+
+            <v-select
+              class="mt-4"
+              v-model="timeRange"
+              :items="timeRangeOptions"
+              item-text="range"
+              item-value="timeid"
+              return-object
+              disabled
+            ></v-select
+          ></v-card-text>
+
+          <!-- TODO: 送信できたら送信完了メッセージ表示したい -->
+          <!-- TODO: 確認画面はコンポーネント分けた方が良いかも -->
+          <v-card-actions>
+            <v-btn
+              class="white--text"
+              color="pink darken-1"
+              block
+              large
+              depressed
+              @click="setNewReservation"
+            >
+              予約する
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions>
+            <v-btn block large text @click="dialog = false"> 戻る </v-btn>
+          </v-card-actions>
+        </v-sheet>
+      </v-card>
+    </v-dialog>
   </v-sheet>
 </template>
 <script>
 import * as _ from "lodash";
-import { ConfigReserve } from "@/api/api";
+import { ConfigReserve, Reserves } from "@/api/api";
 
 export default {
   data: () => ({
+    dialog: false,
     valid: true,
     name: "",
     nameRules: [(v) => !!v || "名前の入力は必須です"],
@@ -114,6 +169,11 @@ export default {
   methods: {
     validate() {
       this.$refs.form.validate();
+      this.$nextTick(function () {
+        if (this.valid) {
+          this.dialog = true;
+        }
+      });
     },
     setDateRange(date) {
       this.$refs.menu.save(date);
@@ -165,6 +225,16 @@ export default {
           value.range = `${value.start} 〜 ${value.end}`;
         });
       }
+    },
+    async setNewReservation() {
+      const params = {
+        email: this.email,
+        reserve_date: this.date,
+        start_time: this.timeRange.start,
+        end_time: this.timeRange.end,
+      };
+      const result = await Reserves().setNewReserve(params);
+      console.log("result", result);
     },
   },
 };
