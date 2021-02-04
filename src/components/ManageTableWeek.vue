@@ -179,7 +179,7 @@ export default {
 </script> 
 
 <style lang="scss" scoped>
-$table-width: 1024px;
+$table-width: 800px;
 $day-width: 40px;
 $active-width: 40px;
 $check-width: 40px;
@@ -189,7 +189,13 @@ $time-width: 128px;
 $edit-width: 40px;
 
 .manage-table {
-  overflow: scroll;
+  width: $table-width;
+  padding: 24px 0;
+}
+
+.manage-table-title {
+  font-size: 20px;
+  color: grey;
 }
 
 .manage-table-inner {

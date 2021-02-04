@@ -25,14 +25,13 @@ export default {
       configData: CONFIG_SCHEDULE,
     };
   },
-  mounted() {
-    // this.configData = CONFIG_SCHEDULE;
-  },
 };
 </script>
 
 <style lang="scss">
 .manage-table {
+  width: 800px;
+
   padding: 24px 0;
 }
 

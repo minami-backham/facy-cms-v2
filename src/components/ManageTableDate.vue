@@ -88,7 +88,6 @@ export default {
       immediate: true,
       deep: true,
       handler: function () {
-        console.log("watch dateData");
         this.getActiveDates();
       },
     },
@@ -139,8 +138,6 @@ export default {
       const addDelimiter = (a, b) => (a ? `${a}-${b}` : b);
       const paths = (obj = {}, head = "") => {
         return Object.entries(obj).reduce((product, [key, value]) => {
-          console.log("dateKeysToArray", product);
-
           let fullPath = addDelimiter(head, key);
           return isObject(value)
             ? product.concat(paths(value, fullPath))
@@ -158,7 +155,6 @@ export default {
     getActiveDates() {
       const dateArray = this.dateKeysToArray(this.dateData);
       const dateArrayActive = this.filterDates(dateArray);
-      console.log("dateArrayActive", dateArrayActive);
       this.activeDates = dateArrayActive.map((item) => {
         return {
           start: item,
@@ -204,6 +200,10 @@ export default {
 
 .manage-table__calendar-control--title {
   font-size: 20px;
+}
+
+.v-calendar-weekly__week {
+  height: 72px !important;
 }
 
 .v-application {
