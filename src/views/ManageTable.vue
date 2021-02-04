@@ -11,7 +11,7 @@
 // import manageTimetableHeader from "../components/manageTimetableHeader.vue";
 import ManageTableWeek from "../components/ManageTableWeek.vue";
 import ManageTableDate from "../components/ManageTableDate.vue";
-import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
+import { ConfigReserve } from "../api/api";
 
 export default {
   name: "managetable",
@@ -22,21 +22,15 @@ export default {
   },
   data() {
     return {
-      configData: CONFIG_SCHEDULE,
+      configData: {},
     };
+  },
+  async mounted() {
+    this.configData = await ConfigReserve().get();
+    console.log("get", this.configData);
   },
 };
 </script>
 
 <style lang="scss">
-.manage-table {
-  width: 800px;
-
-  padding: 24px 0;
-}
-
-.manage-table-title {
-  font-size: 20px;
-  color: grey;
-}
 </style>

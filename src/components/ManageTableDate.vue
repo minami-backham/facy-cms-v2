@@ -65,7 +65,7 @@ export default {
     return {
       type: "month",
       weekday: [0, 1, 2, 3, 4, 5, 6], // 日曜始まり
-      value: this.initToday(), // 選択中の日付
+      value: "", // 選択中の日付
       funcManageTable: funcManageTable,
       dateData: {},
       weekData: {},
@@ -82,8 +82,17 @@ export default {
   mounted() {
     this.dateData = this.configData.date;
     this.weekData = this.configData.day_of_week;
+    this.initToday();
   },
   watch: {
+    configData: {
+      immediate: true,
+      deep: true,
+      handler: function (newVal) {
+        this.dateData = newVal.date;
+        this.weekData = newVal.day_of_week;
+      },
+    },
     dateData: {
       immediate: true,
       deep: true,
@@ -105,6 +114,7 @@ export default {
     // drawerに渡す1日のデータ
     getDayData(_date) {
       const [year, month, date] = this.funcManageTable.getYMD(_date);
+      console.log("getDayData", this.dateData);
       if (_.get(this.dateData, [year, month, date])) {
         // 既存であればそれを返す
         return this.dateData[year][month][date];
@@ -152,7 +162,7 @@ export default {
     },
 
     // icon表示日
-    getActiveDates() {
+    async getActiveDates() {
       const dateArray = this.dateKeysToArray(this.dateData);
       const dateArrayActive = this.filterDates(dateArray);
       this.activeDates = dateArrayActive.map((item) => {
@@ -180,7 +190,7 @@ export default {
       const y = date.getFullYear();
       const m = ("00" + (date.getMonth() + 1)).slice(-2);
       const d = ("00" + date.getDate()).slice(-2);
-      return y + "-" + m + "-" + d;
+      this.value = y + "-" + m + "-" + d;
     },
   },
   computed: {
