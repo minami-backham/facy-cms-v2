@@ -30,3 +30,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.manage-table {
+  padding: 24px 0;
+}
+
+.manage-table-title {
+  font-size: 20px;
+  color: grey;
+}
+</style>
