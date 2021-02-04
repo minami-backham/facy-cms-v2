@@ -1,5 +1,5 @@
 <template>
-  <v-row class="scheule-header">
+  <v-row class="scheule-header px-4">
     <v-col cols="3">
       <v-select
         v-model="sortKey"
