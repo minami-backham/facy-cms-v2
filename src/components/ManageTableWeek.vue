@@ -17,9 +17,7 @@
             {{ funcManageTable.getJpDayShort(index) }}
           </div>
           <div class="table__active">
-            <v-icon title="編集中" v-show="editStatus[index]">{{
-              clock
-            }}</v-icon>
+            <span v-show="editStatus[index]">🕓</span>
           </div>
           <div class="table__check">
             <v-checkbox v-model="day.active"></v-checkbox>
@@ -75,7 +73,6 @@ import * as _ from "lodash";
 import Drawer from "./Drawer.vue";
 import ManageTableDetails from "./ManageTableDetails.vue";
 import { mdiPencil } from "@mdi/js";
-import { mdiClockTimeFourOutline } from "@mdi/js";
 import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 import { DAY_OF_WEEK } from "../api/statics.js";
@@ -96,7 +93,6 @@ export default {
       funcManageTable: funcManageTable,
       weekData: {},
       edit: mdiPencil,
-      clock: mdiClockTimeFourOutline,
       selectTimeRange: START_END_TIME_RANGE, // 開始、終了時刻選択option
       selectTimeDuration: DURATIONS, // 時間枠の長さoption
       drawerToggle: false,
