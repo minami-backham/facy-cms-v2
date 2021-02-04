@@ -5,14 +5,16 @@
       <div class="manage-table__content">
         <div class="manage-table__calendar-control">
           <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-            Prev
-            <!-- <v-icon>mdi-chevron-left</v-icon> -->
+            <v-icon>{{ arrowLeft }}</v-icon>
           </v-btn>
-          --
-          <!-- <v-spacer></v-spacer> -->
+          <span
+            class="manage-table__calendar-control--title"
+            v-if="$refs.calendar"
+          >
+            {{ calendarTitle }}
+          </span>
           <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-            Next
-            <!-- <v-icon>mdi-chevron-right</v-icon> -->
+            <v-icon>{{ arrowRight }}</v-icon>
           </v-btn>
         </div>
         <div class="manage-table__calendar">
@@ -46,6 +48,7 @@ import ManageTableDetails from "./ManageTableDetails.vue";
 import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 import { DAY_OF_WEEK } from "../api/statics.js";
+import { mdiArrowLeft, mdiArrowRight } from "@mdi/js";
 
 // import manageTimetableHeader from "../components/manageTimetableHeader.vue";
 
@@ -62,7 +65,7 @@ export default {
     return {
       type: "month",
       weekday: [0, 1, 2, 3, 4, 5, 6], // 日曜始まり
-      value: "", // 選択中の日付
+      value: this.initToday(), // 選択中の日付
       funcManageTable: funcManageTable,
       dateData: {},
       weekData: {},
@@ -72,6 +75,8 @@ export default {
       editDayName: "", // 編集する曜日テキスト
       editDayData: {}, // 編集する日データ
       activeDates: [], // icon表示する日list
+      arrowRight: mdiArrowRight,
+      arrowLeft: mdiArrowLeft,
     };
   },
   mounted() {
@@ -172,11 +177,35 @@ export default {
       });
       return _.compact(_arr);
     },
+
+    // 選択中の日付の初期値 → 今日(YYYY-MM-DD)
+    initToday() {
+      const date = new Date();
+      const y = date.getFullYear();
+      const m = ("00" + (date.getMonth() + 1)).slice(-2);
+      const d = ("00" + date.getDate()).slice(-2);
+      return y + "-" + m + "-" + d;
+    },
+  },
+  computed: {
+    calendarTitle() {
+      const [year, month] = this.funcManageTable.getYMD(this.value);
+      const _month = month.match(/0\d/) ? month[1] : month;
+      return year + "年 " + _month + "月";
+    },
   },
 };
 </script> 
 
 <style lang="scss">
+.manage-table__calendar-control {
+  text-align: center;
+}
+
+.manage-table__calendar-control--title {
+  font-size: 20px;
+}
+
 .v-application {
   .v-calendar-weekly__day {
     .primary {
