@@ -13,7 +13,11 @@
         <div class="header__edit">詳細</div>
       </div>
       <div class="manage-table__content">
-        <div class="timetable" v-for="(day, index) in weekData" :key="index">
+        <div
+          class="timetable"
+          v-for="(day, index) in sortWeekday(weekData)"
+          :key="index"
+        >
           <div class="table__day">
             {{ funcManageTable.getJpDayShort(index) }}
           </div>
@@ -184,7 +188,42 @@ export default {
       const result = await ConfigReserve().updateDayOfWeek(this.weekData);
       console.log("update week", result);
     },
+
+    // 曜日の並び（月→日）
+    sortWeekday(week) {
+      if (!week) {
+        return;
+      }
+      const sorter = {
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+        sunday: 7,
+      };
+
+      let tmp = [];
+      Object.keys(week).forEach(function (key) {
+        let value = week[key];
+        let index = sorter[key.toLowerCase()];
+        tmp[index] = {
+          key: key,
+          value: value,
+        };
+      });
+
+      let orderedData = {};
+      tmp.forEach(function (obj) {
+        orderedData[obj.key] = obj.value;
+      });
+
+      return orderedData;
+    },
   },
+
+  computed: {},
 };
 </script> 
 
