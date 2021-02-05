@@ -35,7 +35,12 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableDetails :dayName="editDayName" :dayDataProp="editDayData" />
+        <ManageTableDetailDate
+          :dayName="editDayName"
+          :dayDataProp="editDayData"
+          @update-date="updateDate()"
+          @remove-date="removeDate()"
+        />
       </Drawer>
     </div>
   </div>
@@ -44,19 +49,18 @@
 <script>
 import * as _ from "lodash";
 import Drawer from "./Drawer.vue";
-import ManageTableDetails from "./ManageTableDetails.vue";
+import ManageTableDetailDate from "./ManageTableDetailDate.vue";
 import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 import { DAY_OF_WEEK } from "../api/statics.js";
 import { mdiArrowLeft, mdiArrowRight } from "@mdi/js";
-
-// import manageTimetableHeader from "../components/manageTimetableHeader.vue";
+import { ConfigReserve } from "../api/api";
 
 export default {
   name: "timetableweek",
   components: {
     Drawer,
-    ManageTableDetails,
+    ManageTableDetailDate,
   },
   props: {
     configData: Object,
@@ -104,7 +108,7 @@ export default {
   methods: {
     openDrawer(date) {
       this.editDayName = date;
-      this.editDayData = this.getDayData(date);
+      this.editDayData = this.getDayData();
       this.drawerToggle = true;
     },
     closeDrawer() {
@@ -112,9 +116,8 @@ export default {
     },
 
     // drawerに渡す1日のデータ
-    getDayData(_date) {
-      const [year, month, date] = this.funcManageTable.getYMD(_date);
-      console.log("getDayData", this.dateData);
+    getDayData() {
+      const [year, month, date] = this.selectDateYMD;
       if (_.get(this.dateData, [year, month, date])) {
         // 既存であればそれを返す
         return this.dateData[year][month][date];
@@ -126,16 +129,16 @@ export default {
         if (!this.dateData[year][month]) {
           this.$set(this.dateData[year], [month], {});
         }
-        // 日に初期値set
-        const initData = this.getInitDateData(_date);
+        // 追加日に初期値set
+        const initData = this.getInitDateData();
         this.$set(this.dateData[year][month], [date], initData);
         return this.dateData[year][month][date];
       }
     },
 
     // weekDataから同曜日のデータを初期値としてコピー
-    getInitDateData(_date) {
-      const _weekNum = new Date(_date).getDay() + 1;
+    getInitDateData() {
+      const _weekNum = new Date(this.value).getDay() + 1;
       const _dayId = _.find(DAY_OF_WEEK, (day) => day.weekNum == _weekNum).id;
       const copied = _.cloneDeep(this.weekData[_dayId]);
       copied["active"] = true; // デフォルトでactiveに
@@ -192,12 +195,40 @@ export default {
       const d = ("00" + date.getDate()).slice(-2);
       this.value = y + "-" + m + "-" + d;
     },
+
+    // API update 日
+    async updateDate() {
+      const [_year, _month, _date] = this.selectDateYMD;
+      const payload = {
+        year: _year,
+        month: _month,
+        day: _date,
+        params: this.editDayData,
+      };
+      const result = await ConfigReserve().setDate(payload);
+      console.log("update date", result);
+    },
+    async removeDate() {
+      // const [_year, _month, _date] = this.selectDateYMD;
+      // const payload = {
+      //   year: _year,
+      //   month: _month,
+      //   day: _date,
+      //   params: {},
+      // };
+      // const result = await ConfigReserve().setDate(payload);
+      // console.log("remove date", result);
+    },
   },
   computed: {
     calendarTitle() {
-      const [year, month] = this.funcManageTable.getYMD(this.value);
+      const [year, month] = this.selectDateYMD;
       const _month = month.match(/0\d/) ? month[1] : month;
       return year + "年 " + _month + "月";
+    },
+    // 選択中の日付の年月日 [year, month, date]
+    selectDateYMD() {
+      return this.funcManageTable.getYMD(this.value);
     },
   },
 };

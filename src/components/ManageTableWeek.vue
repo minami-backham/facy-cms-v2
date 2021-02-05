@@ -1,5 +1,6 @@
 <template>
   <div class="manage-table">
+    <v-btn @click="updateWeek()">保存</v-btn>
     <div class="manage-table-title">曜日</div>
     <div class="manage-table-inner">
       <div class="manage-table__header">
@@ -63,7 +64,11 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableDetails :dayName="editDayName" :dayDataProp="editDayData" />
+        <ManageTableDetailWeek
+          :dayName="editDayName"
+          :dayDataProp="editDayData"
+          @update-week="updateWeek()"
+        />
       </Drawer>
     </div>
   </div>
@@ -71,19 +76,18 @@
 <script>
 import * as _ from "lodash";
 import Drawer from "./Drawer.vue";
-import ManageTableDetails from "./ManageTableDetails.vue";
+import ManageTableDetailWeek from "./ManageTableDetailWeek.vue";
 import { mdiPencil } from "@mdi/js";
 import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
 import { DAY_OF_WEEK } from "../api/statics.js";
-
-// import manageTimetableHeader from "../components/manageTimetableHeader.vue";
+import { ConfigReserve } from "../api/api";
 
 export default {
   name: "timetableweek",
   components: {
     Drawer,
-    ManageTableDetails,
+    ManageTableDetailWeek,
   },
   props: {
     configData: Object,
@@ -103,6 +107,7 @@ export default {
   },
   mounted() {
     this.weekData = this.configData;
+    // TODO: 曜日の並びfix
   },
   watch: {
     // data()で入ってこないのでwatch
@@ -132,7 +137,6 @@ export default {
     },
     onTimeChange(index) {
       // 時間系の変更あれば変更日の時間枠を再生成
-      console.log("onTimeCHange", index);
       this.weekData[index].detail = this.funcManageTable.rebuildTimeTable(
         this.weekData[index]
       );
@@ -174,11 +178,17 @@ export default {
         }
       });
     },
+
+    // API 週データの更新
+    async updateWeek() {
+      const result = await ConfigReserve().updateDayOfWeek(this.weekData);
+      console.log("update week", result);
+    },
   },
 };
 </script> 
 
-<style lang="scss" scoped>
+<style lang="scss">
 $table-width: 800px;
 $day-width: 40px;
 $active-width: 40px;
@@ -194,6 +204,7 @@ $edit-width: 40px;
 }
 
 .manage-table-title {
+  margin-top: 16px;
   font-size: 20px;
   color: grey;
 }
