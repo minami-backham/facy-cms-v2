@@ -36,7 +36,6 @@
             <td>{{ item.name }}</td>
             <td>{{ item.email }}</td>
             <td>
-              <!-- clickedEditIconにユーザー情報を渡すように修正 -->
               <v-btn icon @click="clickedEditIcon(item)" class="edit-icon">
                 <v-icon>{{ editIcon }}</v-icon>
               </v-btn>
@@ -107,10 +106,7 @@ export default {
         this.accountInfo = rollFiltered;
       }
     },
-    // NOTE：ユーザー情報を引数で受け取るため引数のネーミングを修正
     clickedEditIcon(item) {
-      alert("uid：" + item.uid + "のアカウント詳細を表示");
-      // NOTE：プロフィール更新画面に遷移と該当ユーザー情報を渡す
       this.$router.push({
         name: "UpdateProfile",
         params: { accountInfo: item },
