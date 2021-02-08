@@ -42,19 +42,19 @@ export default {
   data() {
     return {
       valid: true,
-      name: this.accountInfo.name,
+      name: !this.accountInfo ? "" : this.accountInfo.name,
       nameRules: [
         (v) => !!v || "名前の入力は必須です",
         (v) => !!v || "名前を入力してください",
       ],
-      email: this.accountInfo.email,
+      email: !this.accountInfo ? "" : this.accountInfo.email,
       emailRules: [
         (v) => !!v || "メールアドレスの入力は必須です",
         (v) => /.+@.+\..+/.test(v) || "有効なメールアドレスを入力してください",
       ],
       select: {
-        label: this.accountInfo.roll_label,
-        value: this.accountInfo.roll_value,
+        label: !this.accountInfo ? "" : this.accountInfo.roll_label,
+        value: !this.accountInfo ? "" : this.accountInfo.roll_value,
       },
       sample: "",
       items: [
@@ -62,7 +62,7 @@ export default {
         { label: "マーケター", value: "marketer" },
         { label: "サポーター", value: "support" },
       ],
-      uid: this.accountInfo.uid,
+      uid: !this.accountInfo ? "" : this.accountInfo.uid,
     };
   },
   methods: {
