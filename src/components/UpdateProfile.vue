@@ -74,7 +74,6 @@ export default {
         roll: this.select.value,
       };
       const result = await Users().updateUserProfile(params);
-      console.log("result", result.result);
       if (result.result === true) {
         alert("アップデートに成功しました");
       } else {
