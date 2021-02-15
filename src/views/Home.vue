@@ -1,1 +1,17 @@
-https://rawcdn.githack.com/masahiro8/facy-cms-v2/d56537cb3988bc5fa20cb11236210e179ce179db/src/views/Home.vue
+<template>
+  <v-container class="home">
+    <v-row class="px-4">各画面へのリンク</v-row>
+    <v-row class="mt-4 px-4">
+      <v-btn class="mr-4 mt-4" to="/login">ログイン画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/reset">パスワードリセット画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/schedule">スケジュール画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/managetable">予約可能日設定</v-btn>
+      <v-btn class="mr-4 mt-4" to="/reservation">予約フォーム</v-btn>
+    </v-row>
+  </v-container>
+</template>	
+<script>
+export default {
+  name: "home",
+};
+</script>

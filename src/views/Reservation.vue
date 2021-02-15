@@ -80,7 +80,8 @@
     <v-dialog v-model="dialog" fullscreen hide-overlay>
       <v-card class="d-flex align-center" height="100%">
         <v-sheet class="mx-auto" width="300">
-          <v-card-title class="headline"> 確認画面 </v-card-title>
+          <v-card-title class="headline"> 予約内容の確認 </v-card-title>
+          <v-card-text>以下の内容で予約を送信しますか？</v-card-text>
 
           <v-card-text>
             <v-text-field v-model="name" label="名前" disabled></v-text-field>
@@ -110,7 +111,6 @@
             ></v-select
           ></v-card-text>
 
-          <!-- TODO: 送信できたら送信完了メッセージ表示したい -->
           <!-- TODO: 確認画面はコンポーネント分けた方が良いかも -->
           <v-card-actions>
             <v-btn
@@ -127,6 +127,18 @@
           <v-card-actions>
             <v-btn block large text @click="dialog = false"> 戻る </v-btn>
           </v-card-actions>
+
+          <!-- 送信完了メッセージ -->
+          <v-dialog v-model="message" persistent max-width="300">
+            <v-card class="pa-4">
+              <v-card-title>予約を送信しました</v-card-title>
+              <v-card-actions>
+                <v-btn color="pink darken-1" text @click="toHome"
+                  >ホームへ</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-sheet>
       </v-card>
     </v-dialog>
@@ -153,6 +165,7 @@ export default {
     timeRange: "",
     timeRangeOptions: [],
     timeRules: [(v) => !!v || "時間帯を選択してください"],
+    message: false,
   }),
   computed: {
     dateText() {
@@ -235,6 +248,12 @@ export default {
       };
       const result = await Reserves().setNewReserve(params);
       console.log("result", result);
+      this.message = true;
+    },
+    toHome() {
+      this.message = false;
+      this.dialog = false;
+      this.$router.push("/");
     },
   },
 };
