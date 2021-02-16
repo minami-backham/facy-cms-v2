@@ -34,6 +34,7 @@
               @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             ></v-select>
           </div>
           <div class="table__end-time">
@@ -43,6 +44,7 @@
               @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             ></v-select>
           </div>
           <div class="table__time">
@@ -53,6 +55,7 @@
               @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             >
               <template v-slot:item="data">
                 <span>{{ data.item }}分</span>
