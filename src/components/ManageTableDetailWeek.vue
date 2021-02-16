@@ -1,6 +1,6 @@
 <template>
-  <div class="manage-table">
-    <div class="manage-table-inner">
+  <div class="manage-detail-table">
+    <div class="manage-detail-table-inner">
       <v-btn @click="update()">更新</v-btn>
       <ManageTableDetailTable :dayDataProp="dayDataProp" :dayName="dayName" />
     </div>
@@ -35,11 +35,8 @@ export default {
 <style lang="scss" scoped>
 $table-width: 460px;
 
-.manage-table {
-  overflow: scroll;
-}
-
-.manage-table-inner {
+.manage-detail-table-inner {
   width: $table-width;
+  padding: 24px;
 }
 </style>

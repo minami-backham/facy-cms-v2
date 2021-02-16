@@ -48,7 +48,7 @@
       </div>
     </div>
     <v-divider></v-divider>
-    <div class="manage-table-inner">
+    <div class="manage-table-detail-inner">
       <div class="manage-table__header">
         <div class="header__detail">個別の時間指定</div>
       </div>
