@@ -242,7 +242,7 @@ $edit-width: 40px;
 
 .manage-table {
   width: $table-width;
-  padding: 24px 0;
+  padding: 24px;
 }
 
 .manage-table-title {
