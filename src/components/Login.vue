@@ -19,12 +19,21 @@
       ></v-text-field>
     </v-form>
     <div class="button-container">
-      <v-btn color="error" class="button mr-4">　ログイン　</v-btn>
+      <v-btn color="error" class="button mr-4" @click="login()"
+        >　ログイン　</v-btn
+      >
+    </div>
+    <div class="link-reset-container">
+      <router-link class="link-reset" to="/reset"
+        >パスワードを再設定する</router-link
+      >
     </div>
   </div>
 </template>
 
 <script>
+import { UserAuth } from "@/api/userAuth.js";
+
 export default {
   data: () => ({
     valid: false,
@@ -39,6 +48,23 @@ export default {
       (v) => 8 <= v.length || "８文字以上の有効なパスワードを入力してください",
     ],
   }),
+  methods: {
+    async login() {
+      const params = {
+        email: this.email,
+        password: this.password,
+      };
+      const result = await UserAuth().login(params);
+      if (result.error) {
+        alert("パスワードもしくはメールアドレスが間違っています。");
+        this.clearForm();
+      }
+    },
+    clearForm() {
+      this.email = "";
+      this.password = "";
+    },
+  },
 };
 </script>
 
@@ -55,6 +81,16 @@ export default {
       background-color: red;
       color: white;
       width: 100%;
+    }
+  }
+
+  .link-reset-container {
+    text-align: center;
+    margin-top: 30px;
+
+    .link-reset {
+      text-decoration: none;
+      color: black;
     }
   }
 }

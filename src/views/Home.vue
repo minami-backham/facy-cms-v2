@@ -1,26 +1,17 @@
 <template>
-  <div>
-    <v-container>
-      <v-row align="center">
-        <!-- <v-col align-self="center"><div>オンライン相談</div></v-col> -->
-        <!-- <v-col align-self="center"><div>MAHOU MAKE CMS</div></v-col> -->
-      </v-row>
-      <div>
-        <div>各画面へのリンク</div>
-        <v-btn to="/login">ログイン画面</v-btn>
-        <v-btn to="/reset">パスワードリセット画面</v-btn>
-        <v-btn to="/schedule">スケジュール画面</v-btn>
-        <v-btn to="/managetable">予約可能日設定</v-btn>
-        <v-btn to="/manageaccount">アカウント管理画面</v-btn>
-      </div>
-    </v-container>
-  </div>
-</template>
+  <v-container class="home">
+    <v-row class="px-4">各画面へのリンク</v-row>
+    <v-row class="mt-4 px-4">
+      <v-btn class="mr-4 mt-4" to="/login">ログイン画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/reset">パスワードリセット画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/schedule">スケジュール画面</v-btn>
+      <v-btn class="mr-4 mt-4" to="/managetable">予約可能日設定</v-btn>
+      <v-btn class="mr-4 mt-4" to="/reservation">予約フォーム</v-btn>
+    </v-row>
+  </v-container>
+</template>	
 <script>
 export default {
   name: "home",
-  components: {},
 };
 </script>
-<style lang="scss" scoped>
-</style>
