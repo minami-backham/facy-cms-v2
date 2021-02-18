@@ -1,5 +1,5 @@
 <template>
-  <v-row class="scheule-header">
+  <v-row class="scheule-header px-4">
     <v-col cols="3">
       <v-select
         v-model="sortKey"
@@ -106,7 +106,7 @@ export default {
       this.$refs.menu.save(dates);
       this.$emit("date-range", dates);
     },
-    clearDateRange(dates) {
+    clearDateRange() {
       this.dates = null;
       this.$refs.menu.save(this.dates);
       this.$emit("date-range", this.dates);
@@ -124,12 +124,12 @@ export default {
   td:nth-child(6) {
   .v-btn {
     .v-btn__content {
-      color: #3F51B5; //indigo
+      color: #3f51b5; //indigo
     }
   }
   .v-btn--active {
     .v-btn__content {
-      color: #9FA8DA; //indigo lighten-3
+      color: #9fa8da; //indigo lighten-3
     }
   }
 }
@@ -141,13 +141,13 @@ export default {
   td:nth-child(7) {
   .v-btn {
     .v-btn__content {
-      color: #E91E63; //pink
+      color: #e91e63; //pink
     }
   }
 
   .v-btn--active {
     .v-btn__content {
-      color: #F48FB1; //pink lighten-3
+      color: #f48fb1; //pink lighten-3
     }
   }
 }

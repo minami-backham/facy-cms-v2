@@ -31,11 +31,22 @@ initFirebase();
 
 Vue.config.productionTip = false;
 
-/* eslint-disable no-new */
-new Vue({
-  router,
-  vuetify: new Vuetify(opts),
-  el: "#app",
-  components: { App },
-  template: "<App/>"
-});
+if (window.location.href.includes("localhost")) {
+  // localhost
+  new Vue({
+    render: h => h(App),
+    router,
+    components: { App },
+    vuetify: new Vuetify(opts),
+  }).$mount('#app')
+} else {
+  // condesandbox
+  /* eslint-disable no-new */
+  new Vue({
+    router,
+    vuetify: new Vuetify(opts),
+    el: "#app",
+    components: { App },
+    template: "<App/>"
+  });
+}

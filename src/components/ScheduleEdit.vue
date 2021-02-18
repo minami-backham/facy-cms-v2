@@ -51,7 +51,6 @@
               <v-text-field
                 v-model="date"
                 label="日付を選択"
-                prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
                 v-on="on"
@@ -79,17 +78,15 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>時間</v-list-item-title>
-          <v-list-item-action>
-            <v-select
-              v-model="timeRange"
-              :items="timeRangeOptions"
-              item-text="range"
-              item-value="timeid"
-              filled
-              dense
-              return-object
-            ></v-select>
-          </v-list-item-action>
+          <v-select
+            v-model="timeRange"
+            :items="timeRangeOptions"
+            item-text="range"
+            item-value="timeid"
+            filled
+            dense
+            return-object
+          ></v-select>
         </v-list-item-content>
       </v-list-item>
 

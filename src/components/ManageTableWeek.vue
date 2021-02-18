@@ -1,6 +1,6 @@
 <template>
   <div class="manage-table">
-    <v-btn to="">保存</v-btn>
+    <v-btn @click="updateWeek()">保存</v-btn>
     <div class="manage-table-title">曜日</div>
     <div class="manage-table-inner">
       <div class="manage-table__header">
@@ -10,42 +10,52 @@
         <div class="header__start-time">開始時刻</div>
         <div class="header__end-time">終了時刻</div>
         <div class="header__time">時間</div>
-        <div class="header__edit"></div>
+        <div class="header__edit">詳細</div>
       </div>
       <div class="manage-table__content">
-        <div class="timetable" v-for="(day, index) in weekData" :key="index">
-          <div class="table__day">{{ func.getJpDayShort(index) }}</div>
+        <div
+          class="timetable"
+          v-for="(day, index) in sortWeekday(weekData)"
+          :key="index"
+        >
+          <div class="table__day">
+            {{ funcManageTable.getJpDayShort(index) }}
+          </div>
           <div class="table__active">
-            <v-btn icon>
-              <v-icon>{{ clock }}</v-icon>
-            </v-btn>
+            <span v-show="editStatus[index]">🕓</span>
           </div>
           <div class="table__check">
-            <v-checkbox v-model="weekData[index].active"></v-checkbox>
+            <v-checkbox v-model="day.active"></v-checkbox>
           </div>
           <div class="table__start-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].start_time"
+              v-model="day.start_time"
+              @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             ></v-select>
           </div>
           <div class="table__end-time">
             <v-select
               :items="selectTimeRange"
-              v-model="weekData[index].end_time"
+              v-model="day.end_time"
+              @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             ></v-select>
           </div>
           <div class="table__time">
             <v-select
               :items="selectTimeDuration"
-              item-text="`${weekData[index].time}分`"
-              v-model="weekData[index].time"
+              item-text="`${day.time}分`"
+              v-model="day.time"
+              @change="onTimeChange(index)"
               filled
               dense
+              hide-details="auto"
             >
               <template v-slot:item="data">
                 <span>{{ data.item }}分</span>
@@ -53,7 +63,7 @@
             </v-select>
           </div>
           <div class="table__edit">
-            <v-btn icon @click="openDrawer(weekData[index], index)">
+            <v-btn icon @click="openDrawer(day, index)">
               <v-icon>{{ edit }}</v-icon>
             </v-btn>
           </div>
@@ -61,9 +71,10 @@
       </div>
       <!-- 編集 drawer -->
       <Drawer :toggle="drawerToggle" @close="closeDrawer">
-        <ManageTableWeekDetails
+        <ManageTableDetailWeek
           :dayName="editDayName"
           :dayDataProp="editDayData"
+          @update-week="updateWeek()"
         />
       </Drawer>
     </div>
@@ -71,36 +82,80 @@
 </template>
 <script>
 import * as _ from "lodash";
-import CONFIG_SCHEDULE from "../../public/json/config_schedule.json";
 import Drawer from "./Drawer.vue";
-import ManageTableWeekDetails from "./ManageTableWeekDetails.vue";
+import ManageTableDetailWeek from "./ManageTableDetailWeek.vue";
 import { mdiPencil } from "@mdi/js";
-import { mdiClockTimeFourOutline } from "@mdi/js";
-import func from "../func.js";
+import funcManageTable from "../funcManageTable.js";
 import { START_END_TIME_RANGE, DURATIONS } from "../const.js";
-
-// import manageTimetableHeader from "../components/manageTimetableHeader.vue";
+import { DAY_OF_WEEK } from "../api/statics.js";
+import { ConfigReserve } from "../api/api";
 
 export default {
   name: "timetableweek",
   components: {
     Drawer,
-    ManageTableWeekDetails,
+    ManageTableDetailWeek,
+  },
+  props: {
+    configData: Object,
   },
   data() {
     return {
-      func: func,
-      weekData: CONFIG_SCHEDULE.day_of_week,
+      funcManageTable: funcManageTable,
+      weekData: {},
       edit: mdiPencil,
-      clock: mdiClockTimeFourOutline,
       selectTimeRange: START_END_TIME_RANGE, // 開始、終了時刻選択option
       selectTimeDuration: DURATIONS, // 時間枠の長さoption
       drawerToggle: false,
       editDayName: "", // 編集する曜日テキスト
       editDayData: {}, // 編集する日データ
+      editStatus: this.initModifiedStatus(),
     };
   },
+  mounted() {
+    this.weekData = this.configData;
+    // TODO: 曜日の並びfix
+  },
+  watch: {
+    // data()で入ってこないのでwatch
+    configData: {
+      immediate: true,
+      handler: function (newVal) {
+        this.weekData = newVal;
+      },
+    },
+    weekData: {
+      immediate: true,
+      deep: true,
+      handler: function () {
+        this.checkIfModified();
+      },
+    },
+  },
   methods: {
+    initModifiedStatus() {
+      // 各曜日のiconステータスinit
+      const days = _.map(DAY_OF_WEEK, (day) => day.id);
+      let obj = {};
+      days.forEach((day) => {
+        obj[day] = false;
+      });
+      return obj;
+    },
+    onTimeChange(index) {
+      // 時間系の変更あれば変更日の時間枠を再生成
+      this.weekData[index].detail = this.funcManageTable.rebuildTimeTable(
+        this.weekData[index]
+      );
+    },
+    showIcon(key) {
+      // icon表示
+      this.editStatus[key] = true;
+    },
+    removeIcon(key) {
+      // icon非表示
+      this.editStatus[key] = false;
+    },
     openDrawer(dayData, index) {
       this.editDayName = index;
       this.editDayData = dayData;
@@ -109,13 +164,74 @@ export default {
     closeDrawer() {
       this.drawerToggle = false;
     },
+
+    checkIfModified() {
+      // 時間枠修正status（時計icon）check
+      _.forEach(this.weekData, (day, index) => {
+        // activeではない日は表示しない
+        if (day.active == false) {
+          this.removeIcon(index);
+          return;
+        }
+
+        // detail内に無効化された時間枠がある or not
+        const activeTables = day.detail.filter((d) => {
+          return d.active;
+        });
+        if (activeTables.length < day.detail.length) {
+          this.showIcon(index);
+        } else {
+          this.removeIcon(index);
+        }
+      });
+    },
+
+    // API 週データの更新
+    async updateWeek() {
+      const result = await ConfigReserve().updateDayOfWeek(this.weekData);
+      console.log("update week", result);
+    },
+
+    // 曜日の並び（月→日）
+    sortWeekday(week) {
+      if (!week) {
+        return;
+      }
+      const sorter = {
+        monday: 1,
+        tuesday: 2,
+        wednesday: 3,
+        thursday: 4,
+        friday: 5,
+        saturday: 6,
+        sunday: 7,
+      };
+
+      let tmp = [];
+      Object.keys(week).forEach(function (key) {
+        let value = week[key];
+        let index = sorter[key.toLowerCase()];
+        tmp[index] = {
+          key: key,
+          value: value,
+        };
+      });
+
+      let orderedData = {};
+      tmp.forEach(function (obj) {
+        orderedData[obj.key] = obj.value;
+      });
+
+      return orderedData;
+    },
   },
+
   computed: {},
 };
 </script> 
 
-<style lang="scss" scoped>
-$table-width: 1024px;
+<style lang="scss">
+$table-width: 800px;
 $day-width: 40px;
 $active-width: 40px;
 $check-width: 40px;
@@ -125,7 +241,14 @@ $time-width: 128px;
 $edit-width: 40px;
 
 .manage-table {
-  overflow: scroll;
+  width: $table-width;
+  padding: 24px;
+}
+
+.manage-table-title {
+  margin-top: 16px;
+  font-size: 20px;
+  color: grey;
 }
 
 .manage-table-inner {

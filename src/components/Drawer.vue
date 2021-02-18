@@ -2,7 +2,7 @@
   <v-navigation-drawer
     v-model="toggleStatus"
     :width="480"
-    absolute
+    fixed
     temporary
     right
   >
