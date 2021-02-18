@@ -48,86 +48,85 @@
 </template>
 
 <script>
-import { Users } from "@/api/users";
-import { reject } from "lodash";
-import { mdiPencil } from "@mdi/js";
+  import { Users } from "@/api/users";
+  import { mdiPencil } from "@mdi/js";
 
-export default {
-  data: () => ({
-    items: [
-      { label: "管理者", value: "admin" },
-      { label: "マーケター", value: "marketer" },
-      { label: "サポーター", value: "support" },
-    ],
-    accountInfo: [],
-    tempItems: [],
-    editIcon: mdiPencil,
-  }),
-  mounted() {
-    Users()
-      .getUsers()
-      .then((users) => {
-        const userItem = users.map((user) => {
-          let userInfo = {};
-          switch (user.roll) {
-            case "admin":
-              userInfo.roll_label = "管理者";
-              break;
-            case "marketer":
-              userInfo.roll_label = "マーケター";
-              break;
-            case "support":
-              userInfo.roll_label = "サポーター";
-              break;
-            default:
-              userInfo.roll_label = "";
-              break;
-          }
-          userInfo.roll_value = user.roll;
-          userInfo.name = user.username;
-          userInfo.email = user.email;
-          userInfo.uid = user.uid;
-          return userInfo;
+  export default {
+    data: () => ({
+      items: [
+        { label: "管理者", value: "admin" },
+        { label: "マーケター", value: "marketer" },
+        { label: "サポーター", value: "support" },
+      ],
+      accountInfo: [],
+      tempItems: [],
+      editIcon: mdiPencil,
+    }),
+    mounted() {
+      Users()
+        .getUsers()
+        .then((users) => {
+          const userItem = users.map((user) => {
+            let userInfo = {};
+            switch (user.roll) {
+              case "admin":
+                userInfo.roll_label = "管理者";
+                break;
+              case "marketer":
+                userInfo.roll_label = "マーケター";
+                break;
+              case "support":
+                userInfo.roll_label = "サポーター";
+                break;
+              default:
+                userInfo.roll_label = "";
+                break;
+            }
+            userInfo.roll_value = user.roll;
+            userInfo.name = user.username;
+            userInfo.email = user.email;
+            userInfo.uid = user.uid;
+            return userInfo;
+          });
+          this.accountInfo = userItem;
+          this.tempItems = userItem;
+        })
+        .catch((reject) => {
+          console.log(reject);
         });
-        this.accountInfo = userItem;
-        this.tempItems = userItem;
-      })
-      .catch((reject) => {
-        console.log(reject);
-      });
-  },
-  methods: {
-    onChange(value) {
-      this.accountInfo = this.tempItems;
-      if (this.accountInfo.length !== 0) {
-        const rollFiltered = this.accountInfo.filter(
-          (item) => item.roll_value === value
-        );
-        this.accountInfo = rollFiltered;
-      }
     },
-    clickedEditIcon(item) {
-      this.$router.push({
-        name: "UpdateProfile",
-        params: { accountInfo: item },
-      });
+    methods: {
+      onChange(value) {
+        this.accountInfo = this.tempItems;
+        if (this.accountInfo.length !== 0) {
+          const rollFiltered = this.accountInfo.filter(
+            (item) => item.roll_value === value
+          );
+          this.accountInfo = rollFiltered;
+        }
+      },
+      clickedEditIcon(item) {
+        this.$router.push({
+          name: "UpdateProfile",
+          params: { accountInfo: item },
+        });
+      },
     },
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.acount-container {
-  .account {
-    margin-top: 40px;
-  }
+  .acount-container {
+    .account {
+      margin-top: 40px;
+    }
 
-  .invite-btn {
-    margin: 10px 0 40px 10px;
-  }
+    .invite-btn {
+      margin: 10px 0 40px 10px;
+    }
 
-  .edit-icon {
-    margin-top: 4px;
+    .edit-icon {
+      margin-top: 4px;
+    }
   }
-}
 </style>
