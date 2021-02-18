@@ -164,7 +164,6 @@ export default {
     closeDrawer() {
       this.drawerToggle = false;
     },
-
     checkIfModified() {
       // 時間枠修正status（時計icon）check
       _.forEach(this.weekData, (day, index) => {
@@ -173,7 +172,6 @@ export default {
           this.removeIcon(index);
           return;
         }
-
         // detail内に無効化された時間枠がある or not
         const activeTables = day.detail.filter((d) => {
           return d.active;
@@ -239,22 +237,18 @@ $start-time-width: 128px;
 $end-time-width: 128px;
 $time-width: 128px;
 $edit-width: 40px;
-
 .manage-table {
   width: $table-width;
   padding: 24px;
 }
-
 .manage-table-title {
   margin-top: 16px;
   font-size: 20px;
   color: grey;
 }
-
 .manage-table-inner {
   width: $table-width;
 }
-
 .manage-table__header {
   display: flex;
   flex-direction: row;
@@ -292,7 +286,6 @@ $edit-width: 40px;
     width: $edit-width;
   }
 }
-
 .timetable {
   display: flex;
   flex-direction: row;
