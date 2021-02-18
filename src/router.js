@@ -6,6 +6,8 @@ import ResetPassword from "./components/ResetPassword.vue";
 import Schedule from "./views/Schedule.vue";
 import Reservation from "./views/Reservation.vue";
 import ManageTable from "./views/ManageTable.vue";
+import ManageAccount from "./components/ManageAccount.vue";
+import UpdateProfile from "./components/UpdateProfile.vue";
 
 Vue.use(Router);
 
@@ -37,6 +39,17 @@ export default new Router({
       path: "/managetable",
       name: "ManageTable",
       component: ManageTable
+    },
+    {
+      path: "/manageaccount",
+      name: "ManageAcount",
+      component: ManageAccount
+    },
+    {
+      path: "/updateprofile",
+      name: "UpdateProfile",
+      component: UpdateProfile,
+      props: true
     }
   ]
 });
