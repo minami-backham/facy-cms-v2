@@ -33,6 +33,7 @@
 
 <script>
   import { UserAuth } from "@/api/userAuth.js";
+  import { Toaster } from "../components/Toast.vue";
 
   export default {
     data: () => ({
@@ -59,6 +60,9 @@
         if (result.error) {
           alert("パスワードもしくはメールアドレスが間違っています。");
           this.clearForm();
+        } else {
+          Toaster.show({ timeout: 1500, text: "ログインしました。" });
+          this.$router.push("/");
         }
       },
       clearForm() {
