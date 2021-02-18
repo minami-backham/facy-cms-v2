@@ -19,9 +19,9 @@
       ></v-text-field>
     </v-form>
     <div class="button-container">
-      <v-btn color="error" class="button mr-4" @click="login()"
-        >　ログイン　</v-btn
-      >
+      <v-btn color="error" class="button mr-4" @click="login()">
+        ログイン
+      </v-btn>
     </div>
     <div class="link-reset-container">
       <router-link class="link-reset" to="/reset"
@@ -32,66 +32,67 @@
 </template>
 
 <script>
-import { UserAuth } from "@/api/userAuth.js";
+  import { UserAuth } from "@/api/userAuth.js";
 
-export default {
-  data: () => ({
-    valid: false,
-    email: "",
-    emailRules: [
-      (v) => !!v || "メールアドレスの入力は必須です",
-      (v) => /.+@.+/.test(v) || "有効なメールアドレスを入力してください",
-    ],
-    password: "",
-    passwordRules: [
-      (v) => !!v || "パスワードの入力は必須です",
-      (v) => 8 <= v.length || "８文字以上の有効なパスワードを入力してください",
-    ],
-  }),
-  methods: {
-    async login() {
-      const params = {
-        email: this.email,
-        password: this.password,
-      };
-      const result = await UserAuth().login(params);
-      if (result.error) {
-        alert("パスワードもしくはメールアドレスが間違っています。");
-        this.clearForm();
-      }
+  export default {
+    data: () => ({
+      valid: false,
+      email: "",
+      emailRules: [
+        (v) => !!v || "メールアドレスの入力は必須です",
+        (v) => /.+@.+/.test(v) || "有効なメールアドレスを入力してください",
+      ],
+      password: "",
+      passwordRules: [
+        (v) => !!v || "パスワードの入力は必須です",
+        (v) =>
+          8 <= v.length || "８文字以上の有効なパスワードを入力してください",
+      ],
+    }),
+    methods: {
+      async login() {
+        const params = {
+          email: this.email,
+          password: this.password,
+        };
+        const result = await UserAuth().login(params);
+        if (result.error) {
+          alert("パスワードもしくはメールアドレスが間違っています。");
+          this.clearForm();
+        }
+      },
+      clearForm() {
+        this.email = "";
+        this.password = "";
+      },
     },
-    clearForm() {
-      this.email = "";
-      this.password = "";
-    },
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.login {
-  padding: 20px;
-  width: 300px;
-  margin: 200px auto;
+  .login {
+    padding: 20px;
+    width: 300px;
+    margin: 200px auto;
 
-  .button-container {
-    text-align: center;
-    margin-top: 50px;
-    .button {
-      background-color: red;
-      color: white;
-      width: 100%;
+    .button-container {
+      text-align: center;
+      margin-top: 50px;
+      .button {
+        background-color: red;
+        color: white;
+        width: 100%;
+      }
+    }
+
+    .link-reset-container {
+      text-align: center;
+      margin-top: 30px;
+
+      .link-reset {
+        text-decoration: none;
+        color: black;
+      }
     }
   }
-
-  .link-reset-container {
-    text-align: center;
-    margin-top: 30px;
-
-    .link-reset {
-      text-decoration: none;
-      color: black;
-    }
-  }
-}
 </style>
