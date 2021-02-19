@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import * as _ from "lodash";
 import { mdiMessageVideo } from "@mdi/js";
 import { mdiPencil } from "@mdi/js";
 import ScheduleEdit from "./ScheduleEdit.vue";
