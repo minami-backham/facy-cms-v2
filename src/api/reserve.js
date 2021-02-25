@@ -111,7 +111,7 @@ export const Reserves = () => {
       day,
       currentReserve,
     }) => {
-      const _date = new Date(+year, +month, +day);
+      const _date = new Date(+year, +month-1, +day);
       const day_index = _date.getDay();
       const weeks = Object.values(DAY_OF_WEEK);
       //曜日を特定
