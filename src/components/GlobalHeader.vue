@@ -24,25 +24,57 @@
             >
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title
+              ><a @click="logout">ログアウト</a>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </v-app-bar>
 </template>
 <script>
 import { mdiAccountCircle } from "@mdi/js";
+import { UserAuth } from "../api/api";
+import { Toaster } from "../components/Toast.vue";
 
 export default {
   data: () => ({
     AccountCircle: mdiAccountCircle,
     drawer: false,
     items: [
-      { path: "/manage/login", title: "ログイン画面" },
+      { path: "/login", title: "ログイン画面" },
       { path: "/manage/reset", title: "パスワードリセット画面" },
       { path: "/manage/schedule", title: "スケジュール画面" },
       { path: "/manage/managetable", title: "予約可能日設定" },
       { path: "/reservation", title: "予約フォーム" },
     ],
   }),
+  methods: {
+    async logout() {
+      const user = await UserAuth().getLoggedinUserProfile();
+      if (!user) {
+        Toaster.show({ timeout: 1500, text: "ログインしていません" });
+        return;
+      }
+      const result = await UserAuth().logout();
+      if (result.error) {
+        console.log("ログアウトできませんでした");
+      } else {
+        // ログインステータスremove
+        localStorage.removeItem("mahouKeepLogin");
+        localStorage.removeItem("mahouLoginAt");
+
+        Toaster.show({ timeout: 1500, text: "ログアウトしました。" });
+        this.$router.push("/").catch((err) => {
+          console.log(err);
+        });
+        console.log("log out", result);
+      }
+    },
+  },
 };
 </script>
 
