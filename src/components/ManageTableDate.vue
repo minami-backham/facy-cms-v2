@@ -206,8 +206,6 @@ export default {
         day: _date,
         params: this.editDayData,
       };
-      console.log("updateDate payload", payload);
-
       const result = await ConfigReserve().setDate(payload);
       console.log("update date", result);
     },
