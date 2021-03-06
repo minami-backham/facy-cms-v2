@@ -56,52 +56,27 @@ export const Reserves = () => {
       }
       ref.on("value", (snapshot) => {
         const _reserves = snapshot.val();
-
-        console.log("_reserves", _reserves);
-
-        if (!_reserves) {
-          resolved(null);
-        } else {
-          const reserves = Object.keys(_reserves)
-            .filter((key) => {
-              return (
-                !("delete" in _reserves[key]) || _reserves[key].delete === false
-              );
-            })
-            .map((key) => {
-              return {
-                date: _reserves[key].date,
-                end_time: _reserves[key].end_time,
-                id: _reserves[key].id,
-                start_time: _reserves[key].start_time,
-                user_mail: _reserves[key].user_mail,
-                delete: _reserves[key].delete,
-              };
-            });
-          resolved(reserves);
-        }
+        const reserves = Object.keys(_reserves)
+          .filter((key) => {
+            return (
+              !("delete" in _reserves[key]) || _reserves[key].delete === false
+            );
+          })
+          .map((key) => {
+            return {
+              date: _reserves[key].date,
+              end_time: _reserves[key].end_time,
+              id: _reserves[key].id,
+              start_time: _reserves[key].start_time,
+              user_mail: _reserves[key].user_mail,
+              delete: _reserves[key].delete,
+              type_id: _reserves[key].type_id || 0,
+            };
+          });
+        resolved(reserves);
       });
     });
   };
-
-  // const bbb = [
-  //   {
-  //     date: "2021-02-09",
-  //     end_time: "06:00",
-  //     id: "1137468000",
-  //     start_time: "04:00",
-  //     user_mail: "kurokawa@backham",
-  //     delete: false,
-  //   },
-  //   {
-  //     date: "2021-02-09",
-  //     end_time: "03:00",
-  //     id: "3641279000",
-  //     start_time: "01:00",
-  //     user_mail: "kurokawa@backham",
-  //     delete: false,
-  //   },
-  // ];
 
   const getReservableTime = async ({ year, month, day }) => {
     //曜日設定から取得
@@ -202,8 +177,15 @@ export const Reserves = () => {
    * @param {string} start_time 時間形式 10:30
    * @param {string} end_time 時間形式 10:30
    * @param {string} user_mail メール
+   * @param {number} type_id 枠のid
    */
-  const setNewReserve = ({ reserve_date, start_time, end_time, email }) => {
+  const setNewReserve = ({
+    reserve_date,
+    start_time,
+    end_time,
+    email,
+    type_id,
+  }) => {
     return new Promise((resolved) => {
       const _reserve_date = `${reserve_date}`.split("-");
       const _date = new Date(
@@ -226,6 +208,7 @@ export const Reserves = () => {
         end_time_day: end_time.split(":")[1],
         user_mail: email,
         delete: false,
+        type_id: type_id || 0, //単に予約だけでなく別の属性を設定する場合に仕様 例) 部屋A = 1, 部屋B = 2
       };
       db.ref("reserves/" + id).set(params, (error) => {
         if (error) {
@@ -234,7 +217,7 @@ export const Reserves = () => {
           resolved({ result: true });
         }
       });
-      console.log(params);
+      // console.log(params);
       resolved(params);
     });
   };
@@ -245,8 +228,25 @@ export const Reserves = () => {
    * @param {string} start_time 時間形式 10:30
    * @param {string} end_time 時間形式 10:30
    * @param {string} user_mail メール
+   * @param {number} type_id 枠のid
    */
-  const updateReserve = ({ id, reserve_date, start_time, end_time, email }) => {
+  const updateReserve = ({
+    id,
+    reserve_date,
+    start_time,
+    end_time,
+    email,
+    type_id,
+  }) => {
+    console.log(
+      "updateReserve",
+      id,
+      reserve_date,
+      start_time,
+      end_time,
+      email,
+      type_id
+    );
     return new Promise((resolved) => {
       const _reserve_date = `${reserve_date}`.split("-");
       const params = {
@@ -261,6 +261,7 @@ export const Reserves = () => {
         end_time_hour: end_time.split(":")[0],
         end_time_day: end_time.split(":")[1],
         user_mail: email,
+        type_id: type_id || 0,
       };
       db.ref("reserves/" + id).update(params, (error) => {
         if (error) {
@@ -269,7 +270,7 @@ export const Reserves = () => {
           resolved({ result: true });
         }
       });
-      console.log(params);
+      // console.log(params);
       resolved(params);
     });
   };
