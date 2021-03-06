@@ -1,5 +1,8 @@
 import firebase from "firebase";
 import { encrypt } from "./util/Encrypt.js";
+import { ConfigReserve } from "./ConfigReserve.js";
+import { DAY_OF_WEEK } from "../api/statics.js";
+
 /*
 {
   "id": 10001,
@@ -53,23 +56,142 @@ export const Reserves = () => {
       }
       ref.on("value", (snapshot) => {
         const _reserves = snapshot.val();
-        const reserves = Object.keys(_reserves)
-          .filter((key) => {
-            return (
-              !("delete" in _reserves[key]) || _reserves[key].delete === false
-            );
-          })
-          .map((key) => {
-            return {
-              date: _reserves[key].date,
-              end_time: _reserves[key].end_time,
-              id: _reserves[key].id,
-              start_time: _reserves[key].start_time,
-              user_mail: _reserves[key].user_mail,
-              delete: _reserves[key].delete,
-            };
-          });
-        resolved(reserves);
+
+        console.log("_reserves", _reserves);
+
+        if (!_reserves) {
+          resolved(null);
+        } else {
+          const reserves = Object.keys(_reserves)
+            .filter((key) => {
+              return (
+                !("delete" in _reserves[key]) || _reserves[key].delete === false
+              );
+            })
+            .map((key) => {
+              return {
+                date: _reserves[key].date,
+                end_time: _reserves[key].end_time,
+                id: _reserves[key].id,
+                start_time: _reserves[key].start_time,
+                user_mail: _reserves[key].user_mail,
+                delete: _reserves[key].delete,
+              };
+            });
+          resolved(reserves);
+        }
+      });
+    });
+  };
+
+  // const bbb = [
+  //   {
+  //     date: "2021-02-09",
+  //     end_time: "06:00",
+  //     id: "1137468000",
+  //     start_time: "04:00",
+  //     user_mail: "kurokawa@backham",
+  //     delete: false,
+  //   },
+  //   {
+  //     date: "2021-02-09",
+  //     end_time: "03:00",
+  //     id: "3641279000",
+  //     start_time: "01:00",
+  //     user_mail: "kurokawa@backham",
+  //     delete: false,
+  //   },
+  // ];
+
+  const getReservableTime = async ({ year, month, day }) => {
+    //曜日設定から取得
+    const getFreeTimeFrameFromConfigDayOfWeek = async ({
+      year,
+      month,
+      day,
+      currentReserve,
+    }) => {
+      const _date = new Date(+year, +month-1, +day);
+      const day_index = _date.getDay();
+      const weeks = Object.values(DAY_OF_WEEK);
+      //曜日を特定
+      const _day = weeks.find((d) => {
+        return d.index === day_index;
+      });
+
+      //曜日設定を取得
+      const configDayOfWeek = await ConfigReserve().getDayOfWeek(_day.id);
+      if (!configDayOfWeek.active) return null;
+
+      //予約がない場合
+      if (!currentReserve) return configDayOfWeek.detail;
+
+      //絞り込み
+      return configDayOfWeek.detail.filter((time_frame) => {
+        const reserved = currentReserve.find((reserve) => {
+          return time_frame.active && time_frame.start === reserve.start_time;
+        });
+        return !reserved;
+      });
+    };
+
+    const getFreeTimeFrameFromConfigDate = async ({
+      year,
+      month,
+      day,
+      currentReserve,
+    }) => {
+      //日付設定を取得
+      const configDate = await ConfigReserve().getDate({
+        year,
+        month,
+        day,
+      });
+
+      //ない、もしくは非アクティブ
+      if (!configDate || !configDate.active) return null;
+
+      //予約がない場合
+      if (!currentReserve) return configDate.detail;
+
+      //絞り込み
+      return configDate.detail.filter((time_frame) => {
+        const reserved = currentReserve.find((reserve) => {
+          return time_frame.active && time_frame.start === reserve.start_time;
+        });
+        return !reserved;
+      });
+    };
+
+    //予約状況を取得
+    const currentReserve = await getReserves({
+      year,
+      month,
+      day,
+    });
+
+    //日付から取得
+    const free_time_frame_date = await getFreeTimeFrameFromConfigDate({
+      year,
+      month,
+      day,
+      currentReserve,
+    });
+
+    //曜日設定から取得
+    const free_time_frame_day = await getFreeTimeFrameFromConfigDayOfWeek({
+      year,
+      month,
+      day,
+      currentReserve,
+    });
+
+    let free_time_frame = free_time_frame_date || free_time_frame_day;
+
+    return new Promise((resolved) => {
+      resolved({
+        active: free_time_frame ? true : false,
+        detail: free_time_frame,
       });
     });
   };
@@ -169,5 +291,6 @@ export const Reserves = () => {
     setNewReserve,
     updateReserve,
     deleteReserve,
+    getReservableTime,
   };
 };

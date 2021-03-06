@@ -142,6 +142,17 @@
         </v-sheet>
       </v-card>
     </v-dialog>
+    <!-- 空き時間なしメッセージ -->
+    <v-dialog v-model="notReservable" persistent max-width="500">
+      <v-card class="pa-4">
+        <v-card-title class="text-center"
+          >この日には予約可能な時間枠がありません</v-card-title
+        >
+        <v-card-actions>
+          <v-btn block large text @click="notReservable = false"> 戻る </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-sheet>
 </template>
 <script>
@@ -166,6 +177,7 @@ export default {
     timeRangeOptions: [],
     timeRules: [(v) => !!v || "時間帯を選択してください"],
     message: false,
+    notReservable: false,
   }),
   computed: {
     dateText() {
@@ -217,7 +229,8 @@ export default {
         const date = new Date(yearStr, jsMonth, dayStr);
         const dayOfWeek = daysOfWeekStr[date.getDay()];
 
-        const timeRangeByDate = await ConfigReserve().getDate({
+        // 予約可能な時間帯を取得
+        const timeRangeByDate = await Reserves().getReservableTime({
           year: yearStr,
           month: monthStr,
           day: dayStr,
@@ -229,9 +242,16 @@ export default {
 
         //日付指定でタイムテーブルがない場合は曜日指定のタイムテーブルを取得する
         if (timeRangeByDate) {
-          this.timeRangeOptions = timeRangeByDate.detail;
+          const activeTables = this.getActiveTables(timeRangeByDate.detail);
+          this.timeRangeOptions = activeTables;
+          // 空き時間帯がない場合は通知
+          if (activeTables.length == 0) {
+            this.notReservable = true;
+          }
         } else {
-          this.timeRangeOptions = timeRangeByDayOfWeek.detail;
+          this.timeRangeOptions = this.getActiveTables(
+            timeRangeByDayOfWeek.detail
+          );
         }
 
         _.forEach(this.timeRangeOptions, function (value) {
@@ -254,6 +274,10 @@ export default {
       this.message = false;
       this.dialog = false;
       this.$router.push("/");
+    },
+    getActiveTables(detail) {
+      // active: true な時間枠だけ返す
+      return detail.filter((table) => table.active);
     },
   },
 };

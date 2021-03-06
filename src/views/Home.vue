@@ -11,7 +11,7 @@
   </v-container>
 </template>
 <script>
-  export default {
-    name: "home",
-  };
+export default {
+  name: "home",
+};
 </script>

@@ -189,7 +189,7 @@ export default {
       const date = new Date(yearStr, jsMonth, dayStr);
       const dayOfWeek = daysOfWeekStr[date.getDay()];
 
-      const timeRangeByDate = await ConfigReserve().getDate({
+      const timeRangeByDate = await Reserves().getReservableTime({
         year: yearStr,
         month: monthStr,
         day: dayStr,
@@ -199,15 +199,31 @@ export default {
 
       //日付指定でタイムテーブルがない場合は曜日指定のタイムテーブルを取得する
       if (timeRangeByDate) {
-        this.timeRangeOptions = timeRangeByDate.detail;
+        this.timeRangeOptions = this.getActiveTables(timeRangeByDate.detail);
       } else {
-        this.timeRangeOptions = timeRangeByDayOfWeek.detail;
+        this.timeRangeOptions = this.getActiveTables(
+          timeRangeByDayOfWeek.detail
+        );
       }
 
+      // selectに現在予約中の時間帯を追加
+      this.timeRangeOptions.push(this.timeRangeFormat(this.reservation));
+
+      // start時間順で並び替え
+      this.timeRangeOptions.sort((a, b) => {
+        if (a.start < b.start) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+
+      // select用の時間枠文字列生成
       _.forEach(this.timeRangeOptions, function (value) {
         value.range = `${value.start} 〜 ${value.end}`;
       });
 
+      // 現在予約中の時間帯をselected
       this.timeRange = _.find(this.timeRangeOptions, [
         "start",
         this.reservation.start_time,
@@ -234,6 +250,19 @@ export default {
       console.log("更新情報", result);
       this.$emit("update");
       this.edit = !this.edit;
+    },
+    getActiveTables(detail) {
+      // active: true な時間枠だけ返す
+      return detail.filter((table) => table.active);
+    },
+    timeRangeFormat(detail) {
+      // 選択中の時間枠をselect用フォーマットに変換
+      return {
+        active: true,
+        end: detail.end_time,
+        start: detail.start_time,
+        range: "",
+      };
     },
   },
 };

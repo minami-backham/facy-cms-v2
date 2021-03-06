@@ -146,8 +146,8 @@ const config_reserves_format = {
     },
   },
   date: {
-    "2021": {
-      "03": {
+    "2020": {
+      "01": {
         "01": {
           active: true,
           detail: [
@@ -210,7 +210,6 @@ export const ConfigReserve = () => {
   //日付で取得
   const getDate = ({ year, month, day }) => {
     const path = getResevePath([year, month, day], "/config_reserves/date");
-    console.log("path = ", path);
     return new Promise((resolved) => {
       const ref = db.ref(path);
       ref.on("value", (snapshot) => {
@@ -237,13 +236,8 @@ export const ConfigReserve = () => {
 
   //曜日単位で更新
   const updateDayOfWeek = async (params) => {
-    return get().then((reserves) => {
-      return setDayOfWeek(params, reserves)
-    })
-  };
-
-  const setDayOfWeek = async (params, reserves) => {
     return new Promise((resolved) => {
+      const reserves = get();
       const day_of_week = Object.assign(reserves.day_of_week, params);
       db.ref("/config_reserves/day_of_week").set(day_of_week, (error) => {
         if (error) {
@@ -278,13 +272,9 @@ export const ConfigReserve = () => {
   };
 
   const setDate = async ({ year, month, day, params }) => {
-    return get().then((reserves) => {
-      return setOneDate({ year, month, day, params, reserves })
-    })
-  };
-  const setOneDate = async ({ year, month, day, params, reserves }) => {
     console.log("params = ", params);
     return new Promise((resolved) => {
+      const reserves = get();
       //再帰的に登録できるキーを抽出
       const { path, param } = reqKey(
         { ...reserves.date },

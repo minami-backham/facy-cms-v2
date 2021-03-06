@@ -138,8 +138,9 @@ export default {
 
     // weekDataから同曜日のデータを初期値としてコピー
     getInitDateData() {
-      const _weekNum = new Date(this.value).getDay() + 1;
-      const _dayId = _.find(DAY_OF_WEEK, (day) => day.weekNum == _weekNum).id;
+      const _weekNum = new Date(this.value).getDay();
+      const _dayId = _.find(DAY_OF_WEEK, (day) => day.index == _weekNum).id;
+      console.log(_dayId);
       const copied = _.cloneDeep(this.weekData[_dayId]);
       copied["active"] = true; // デフォルトでactiveに
       return copied;
